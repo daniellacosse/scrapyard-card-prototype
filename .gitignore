@@ -1,6 +1,6 @@
 scrap/_output
 blueprint/_output
-mastersheets/_output
+component/_output
 
 scrap/blueprint_edited_results.csv
 scrap/cache.csv
