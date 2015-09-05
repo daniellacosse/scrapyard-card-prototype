@@ -10,3 +10,5 @@ blueprint/cache.csv
 blueprint/results.csv
 
 component/cache.csv
+
+Gemfile.lock
