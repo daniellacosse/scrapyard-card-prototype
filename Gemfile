@@ -1,0 +1,2 @@
+gem "squib"
+gem "prawn"

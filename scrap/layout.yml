@@ -1,0 +1,31 @@
+fullwidth:
+   width: 1.6in
+   x: 0.2in
+   align: center
+   color: black
+   font: Open Sans,Regular 72
+title:
+   extends: fullwidth
+   font: Open Sans,Bold 72
+   y: 0.2in
+footer:
+   extends: fullwidth
+   color: "#666"
+   y: 1.5in
+bottomright:
+   x: 1.5in
+   y: 1.5in
+   font: Open Sans,Regular 20
+middle:
+   font: Open Sans,Bold 150
+   x: 0.8in
+   y: 0.8in
+brass:
+   extends: middle
+   color: "#B5A642"
+silver:
+   extends: middle
+   color: "#C0C0C0"
+gold:
+   extends: middle
+   color: "#ffd700"

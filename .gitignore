@@ -1,0 +1,12 @@
+scrap/_output
+blueprint/_output
+mastersheets/_output
+
+scrap/blueprint_edited_results.csv
+scrap/cache.csv
+
+blueprint/scrap_cache.csv
+blueprint/cache.csv
+blueprint/results.csv
+
+component/cache.csv
