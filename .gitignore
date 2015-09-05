@@ -11,4 +11,6 @@ blueprint/results.csv
 
 component/cache.csv
 
+mastersheets/decks.pdf
+
 Gemfile.lock
