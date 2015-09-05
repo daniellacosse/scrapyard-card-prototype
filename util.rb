@@ -28,9 +28,25 @@ def percent(amount, total)
 	"#{(amount.to_f / total.to_f * 100).round.to_i}%"
 end
 
+class Float
+	def inches
+		self * 72
+	end
+end
+
+class Integer
+	def inches
+		self * 72
+	end
+end
+
 class Array
 	def truthy_count
 		self.map { |el| if_truthy(el) { el } }.compact.count
+	end
+
+	def inches
+		self.map &:inches
 	end
 end
 

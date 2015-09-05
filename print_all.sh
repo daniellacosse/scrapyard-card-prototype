@@ -19,14 +19,11 @@ ruby deck.rb
 ruby analyzer.rb
 cp -f -v results.csv ../scrap/blueprint_edited_results.csv
 
-cd ..
+cd ../scrap
+vi blueprint_edited_results.csv
+ruby deck.rb
 
-printf "Whew! NOOOWWW just edit scrap/blueprint_edited_results.csv and run ruby deck on the scrap folder again!"\n
-atom scrap/blueprint_edited_results.csv
+cd ../mastersheets
+ruby assemble_pdf.rb
 
-# cd ../scrap
-# vi blueprint_edited_results.csv
-# ruby deck.rb
-
-# cd ../mastersheets
-# ruby assemble_pdf.rb
+printf "DONE. You can print out mastersheets/decks.pdf now!"
