@@ -31,3 +31,7 @@ paragraph:
    x: 0.2in
    font: Open Sans,Regular 32
    wrap: true
+bottom_right:
+   x: 2.2in
+   y: 3.2in
+   font: Open Sans,Regular 48

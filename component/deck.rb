@@ -76,5 +76,7 @@ Deck.new(DECK_CONFIG) do
 	text str: buffer["weapon_meta"], y: "2.32in",          layout: "meta"
 	text str: data["weapon_effect"], y: "2.6in",          layout: "paragraph"
 
+	text str: data["id"], layout: "bottom_right"
+
 	save_png prefix: "comp_"
 end

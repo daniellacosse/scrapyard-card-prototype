@@ -66,5 +66,7 @@ Deck.new(DECK_CONFIG) do
 	text str: buffer["five"], y: ext, layout: "number"
 	text str: buffer["req5"], y: ext, layout: "list"
 
+	text str: data["id"], layout: "bottom_right"
+
 	save_png prefix: "bprint_"
 end
