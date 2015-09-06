@@ -28,6 +28,10 @@ def percent(amount, total)
 	"#{(amount.to_f / total.to_f * 100).round.to_i}%"
 end
 
+def dbl_digits(int)
+	(int <= 9) ? "0#{int}" : int
+end
+
 class Float
 	def inches
 		self * 72

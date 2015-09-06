@@ -1,21 +1,22 @@
 require "prawn"
-require "../util"
+require "util"
 require "ruby-progressbar"
 include Prawn
 
-BPRINT_ROW_SIZE = 3
-BPRINT_COL_SIZE = 3
-BPRINT_FRONTS = "../blueprint/_output/bprint_"
-BPRINT_BACKS = "../component/_output/comp_"
-BPRINT_COUNT = Dir["../component/_output/*"].length
+BPRINT_ROW_SIZE, BPRINT_COL_SIZE = 3, 3
+BPRINT_FRONTS = "blueprint/_output/bprint_"
+BPRINT_BACKS = "component/_output/comp_"
+BPRINT_COUNT = Dir["component/_output/*"].length
 
-SCRAP_ROW_SIZE = 4
-SCRAP_COL_SIZE = 5
-SCRAP_FRONTS = "../scrap/_output/scrap_"
-SCRAP_BACKS = "../scrap/_output/scrap_back_"
-SCRAP_COUNT = Dir["../scrap/_output/*"].length / 2
+SCRAP_ROW_SIZE, SCRAP_COL_SIZE = 4, 5
+SCRAP_FRONTS = "scrap/_output/scrap_"
+SCRAP_BACKS = "scrap/_output/scrap_back_"
+SCRAP_COUNT = Dir["scrap/_output/*"].length / 2
 
-pages = ProgressBar.create(
+PILOT_COUNT = Dir["pilots/*"].length
+PILOT_FRONTS = "pilots/pilot_"
+
+pdf_progress = ProgressBar.create(
 	title: "Pages",
 	total: [
 		(BPRINT_COUNT.to_f / (BPRINT_ROW_SIZE * BPRINT_COL_SIZE)).ceil * 2,
@@ -24,12 +25,8 @@ pages = ProgressBar.create(
 	].inject(:+)
 )
 
-def dbl_digits(int)
-	(int <= 9) ? "0#{int}" : int
-end
-
-Document.generate "decks.pdf", margin: 0 do |pdf|
-	pages.increment
+Document.generate "deck_sheets.pdf", margin: 0 do |pdf|
+	pdf_progress.increment
 
 	# blueprints
 	sets_printed = 0
@@ -58,7 +55,7 @@ Document.generate "decks.pdf", margin: 0 do |pdf|
 		end
 
 		pdf.start_new_page
-		pages.increment
+		pdf_progress.increment
 
 		BPRINT_ROW_SIZE.times do |i|
 			BPRINT_COL_SIZE.times do |j|
@@ -83,7 +80,7 @@ Document.generate "decks.pdf", margin: 0 do |pdf|
 
 		sets_printed += 1
 		pdf.start_new_page
-		pages.increment
+		pdf_progress.increment
 	end
 
 	# scraps (could be refactored but what's the point really)
@@ -141,5 +138,22 @@ Document.generate "decks.pdf", margin: 0 do |pdf|
 		pages.increment
 	end
 
-	puts "Done. Made #{pdf.page_count} pages. Writing to file (I guess)..."
+	# pilot length is hard-coded because ~confidence~
+	3.times do |i|
+		2.times do |j|
+			current_card = dbl_digits(
+				 sets_printed_count + (i * 3 + j)
+			)
+
+			pdf.image(
+				"#{PILOT_BACKS}#{current_card}.png",
+				{
+					width: 2.5.inches,
+					at: [(i * 2.5), (11 - j * 2.5)].inches
+				}
+			)
+		end
+	end
+
+	puts "Made #{pdf.page_count} pages. Writing file @ deck_sheets.pdf..."
 end

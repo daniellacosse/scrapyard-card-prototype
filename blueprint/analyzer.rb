@@ -6,10 +6,10 @@ puts ""
 puts "Analyzing..."
 puts ""
 
-blueprints = CSV.read("cache.csv")
+blueprints = CSV.read "cache.csv"
 blueprints.shift
 
-scraps = CSV.read("scrap_cache.csv")
+scraps = CSV.read "../scrap/cache.csv" 
 scraps.shift
 
 scrap_list = blueprints.map do |row|

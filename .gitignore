@@ -1,16 +1,12 @@
-scrap/_output
-blueprint/_output
-component/_output
-
-scrap/blueprint_edited_results.csv
-scrap/cache.csv
-
-blueprint/scrap_cache.csv
-blueprint/cache.csv
-blueprint/results.csv
+Gemfile.lock
 
 component/cache.csv
+blueprint/cache.csv
+blueprint/results.csv
+scrap/cache.csv
 
-mastersheets/decks.pdf
+component/_output
+blueprint/_output
+scrap/_output
 
-Gemfile.lock
+deck_sheets.pdf

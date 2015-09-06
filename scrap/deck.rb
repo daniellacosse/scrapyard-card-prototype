@@ -4,13 +4,15 @@ include Squib
 
 Y_POS = ["0.55in", "0.8in", "1.05in"]
 
-open_gsheet("../mastersheets/master_scrapsheet.gsheet")
+# open_gsheet("../mastersheets/master_scrapsheet.gsheet")
 
 data = CSV.read "cache.csv"
 keys = data.shift
 
-mappings = CSV.read "blueprint_edited_results.csv"
-mappings.shift
+mappings = CSV.read "../blueprint/results.csv"
+manuals = CSV.read "manual_assignments.csv"
+
+#TODO: concat mappings & manuals
 
 remapped_data = {}
 keys.each { |key| remapped_data[key] = [] }
@@ -75,6 +77,10 @@ Deck.new(DECK_CONFIG) do
 			new_row["rarity_color"] = "silver"
 		when "***"
 			new_row["rarity_color"] = "gold"
+		when "reserve"
+			new_row["rarity_color"] = "purple"
+		when "event"
+			new_row["rarity_color"] = "black"
 		end
 		new_row
 	end
