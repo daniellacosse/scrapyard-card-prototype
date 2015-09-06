@@ -1,6 +1,7 @@
 require "open-uri"
 require "json"
 require "deep_clone"
+require "csv"
 
 def open_gsheet(filepath)
 	# (1) open gdoc

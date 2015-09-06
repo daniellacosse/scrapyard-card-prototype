@@ -4,18 +4,18 @@ bundle install
 
 # (1)
 printf "Printing Components..."
-cd component/
+echo && cd component/
 ruby deck.rb
 ruby analyzer.rb
 
 # (2)
 printf "Printing Component Blueprints..."
-cd ../blueprint/
+echo && cd ../blueprint/
 ruby deck.rb
 
 # (3.1)
 printf "Inferring Scrap card counts..."
-cd ../scrap/
+echo && cd ../scrap/
 ruby get_cache.rb # get scrap cache for blueprint analysis
 
 cd ../blueprint/
@@ -23,13 +23,13 @@ ruby analyzer.rb # spits out inferred scrap card counts
 
 #(3.2)
 printf "Printing Scraps..."
-cd ../scrap/
+echo && cd ../scrap/
 ruby deck.rb
 ruby analyzer.rb
 
 # (4)
 printf "Compiling PDF..."
-cd ..
+echo && cd ..
 ruby assemble_pdf.rb
 
-printf "DONE. Print out your new PDF fo' real and slice'er'up!"
+printf "DONE. Print out your new PDF fo' real and slice'er'up!" && echo

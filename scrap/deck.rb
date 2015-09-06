@@ -12,22 +12,27 @@ keys = data.shift
 mappings = CSV.read "../blueprint/results.csv"
 manuals = CSV.read "manual_assignments.csv"
 
-#TODO: concat mappings & manuals
-
+#TODO: manuals
 remapped_data = {}
 keys.each { |key| remapped_data[key] = [] }
 
 name_index = keys.index "name"
 
 data.each_with_index do |row, i|
-	selection = mappings.select { |e| e.first == row[name_index] }.first
+	map_selection = mappings.select { |mapp| mapp.first == data_row[name_index] }.first
+	manual_selection = manuals.select { |man| man.first == data_row[name_index] }.first
+
 	if selection
 		number = selection.last.to_i
+		number += manual_selection.last.to_i if manual_selection
 		number.times do
 			keys.each_with_index { |key, j| remapped_data[key] << row[j] }
 		end
 	else
-		keys.each_with_index { |key, j| remapped_data[key] << row[j] }
+		number = manual_selection.last.to_i
+		number.times do
+			keys.each_with_index { |key, j| remapped_data[key] << row[j] }
+		end
 	end
 end
 
