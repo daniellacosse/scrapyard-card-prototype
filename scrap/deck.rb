@@ -4,36 +4,68 @@ include Squib
 
 Y_POS = ["0.55in", "0.8in", "1.05in"]
 
-# open_gsheet("../mastersheets/master_scrapsheet.gsheet")
-
 data = CSV.read "cache.csv"
 keys = data.shift
 
 mappings = CSV.read "../blueprint/results.csv"
-manuals = CSV.read "manual_assignments.csv"
+rares = CSV.read "rare_assignments.csv"
+reserve = CSV.read "reserve_assignments.csv"
+reserve_count = 0
 
-#TODO: manuals
 remapped_data = {}
 keys.each { |key| remapped_data[key] = [] }
 
 name_index = keys.index "name"
 
-data.each_with_index do |row, i|
+data.each_with_index do |data_row, i|
 	map_selection = mappings.select { |mapp| mapp.first == data_row[name_index] }.first
-	manual_selection = manuals.select { |man| man.first == data_row[name_index] }.first
+	reserve_selection = reserve.select { |res| res.first == data_row[name_index] }.first
+	rare_selection = rares.select { |rar| rar.first == data_row[name_index] }.first
 
-	if selection
-		number = selection.last.to_i
-		number += manual_selection.last.to_i if manual_selection
+	if map_selection
+		number = map_selection.last.to_i
+
+		# if it's a reserve thing, don't need as much in the real stack
+		if reserve_selection && (number - reserve_selection.last.to_i > 2)
+			number -= reserve_selection.last.to_i
+			reserve_count += reserve_selection.last.to_i
+
+			reserve_selection.last.to_i.times do
+				keys.each_with_index do |key, j|
+					if key == "rarity"
+						remapped_data[key] << "r"
+					else
+						remapped_data[key] << data_row[j]
+					end
+				end
+			end
+		end
+
 		number.times do
-			keys.each_with_index { |key, j| remapped_data[key] << row[j] }
+			keys.each_with_index { |key, j| remapped_data[key] << data_row[j] }
 		end
 	else
-		number = manual_selection.last.to_i
+		number = rare_selection.last.to_i
 		number.times do
-			keys.each_with_index { |key, j| remapped_data[key] << row[j] }
+			keys.each_with_index { |key, j| remapped_data[key] << data_row[j] }
 		end
 	end
+end
+
+until reserve_count <= 0
+	# animal trophy is the one exception
+	mappings.delete_if { |row| row.first == "Animal Trophy" }
+
+	weakest_link = mappings.min { |a, b| a.last.to_i <=> b.last.to_i }
+
+	data_row = data.select { |row| row[0] == weakest_link.first }.first
+	keys.each_with_index { |key, j| remapped_data[key] << data_row[j] }
+
+	mappings.map! do |row|
+		(row.first == weakest_link.first) ? [row.first, (row.last.to_i + 1).to_s] : row
+	end
+
+	reserve_count -= 1
 end
 
 DECK_CONFIG = {
@@ -60,13 +92,13 @@ Deck.new(DECK_CONFIG) do
 	end
 
 	background color: "white"
-	rect width: "2in", height: "2in", stroke_color: :black, stroke_width: 10
+	rect width: "2in", height: "2in", stroke_color: :black, stroke_width: 20
 	text str: remapped_data["name"],               layout: "title"
+	text str: remapped_data["event_effect"], y: Y_POS[0],   layout: "paragraph"
 	text str: buffer["plys"], y: Y_POS[0],         layout: "fullwidth"
 	text str: buffer["cers"], y: buffer["cers_y"], layout: "fullwidth"
 	text str: buffer["alys"], y: buffer["alys_y"], layout: "fullwidth"
 	text str: buffer["slvs"],                      layout: "footer"
-	# text str: data["rarity"],                      layout: "bottomright"
 
 	save_png prefix: "scrap_"
 end
@@ -82,16 +114,16 @@ Deck.new(DECK_CONFIG) do
 			new_row["rarity_color"] = "silver"
 		when "***"
 			new_row["rarity_color"] = "gold"
-		when "reserve"
-			new_row["rarity_color"] = "purple"
-		when "event"
+		when "e"
 			new_row["rarity_color"] = "black"
+		when "r"
+			new_row["rarity_color"] = "purple"
 		end
 		new_row
 	end
 
-	background color: "white"
-	rect width: "2in", height: "2in", stroke_color: :black, stroke_width: 30
+	background color: "#fff"
+	rect width: "2in", height: "2in", stroke_color: :black, stroke_width: 60
 
 	text str: "+", layout: buffer["rarity_color"]
 

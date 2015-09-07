@@ -23,13 +23,13 @@ gray:
    color: gray
 meta:
    extends: gray
-   font: Open Sans,Italic 48
+   font: Open Sans,Italic 72
 paragraph:
    align: left
-   height: 0.75in
+   height: 1.5in
    width: 2.1in
    x: 0.2in
-   font: Open Sans,Regular 32
+   font: Open Sans,Regular 48
    wrap: true
 bottom_right:
    x: 2.2in

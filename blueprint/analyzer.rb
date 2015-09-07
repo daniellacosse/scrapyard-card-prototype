@@ -2,7 +2,7 @@ require "csv"
 require "colorize"
 require "../util"
 SCRAP_DECK_SIZE = 340
-AVERAGE_SCRAP_VALUE = 2.6
+AVERAGE_SCRAP_VALUE = 3
 
 puts ""
 puts "Analyzing..."
@@ -46,7 +46,7 @@ scrap_list = blueprints.map do |row|
 	end
 
 	requirement_sum = requirement_options.sum
-	if requirement_sum >= 20
+	if requirement_sum >= 24
 		puts "#{'(!) High cost'.red}: #{row[1]} (#{requirement_sum} / #{(requirement_sum / AVERAGE_SCRAP_VALUE).round(2)})"
 	end
 	proxy_costs << requirement_sum

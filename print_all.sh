@@ -31,5 +31,3 @@ ruby analyzer.rb
 printf "Compiling PDF..."
 echo && cd ..
 ruby assemble_pdf.rb
-
-printf "DONE. Print out your new PDF fo' real and slice'er'up!" && echo

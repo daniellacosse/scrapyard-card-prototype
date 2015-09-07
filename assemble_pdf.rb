@@ -19,7 +19,7 @@ PILOT_COUNT = Dir["pilots/*"].length
 
 pdf_progress = ProgressBar.create(
 	title: "Placing Cards:",
-	total: 946, # BPRINT_COUNT + SCRAP_COUNT + PILOT_COUNT,
+	total: nil,
 	format: "%t <%B> %p%% %a"
 )
 
@@ -108,6 +108,11 @@ Document.generate "deck_sheets.pdf", margin: 0 do |pdf|
 					}
 				)
 
+				# pdf.text_box current_card.to_s, at: [
+				# 	(8.5 - (i + 1) * 2), # x - right to left placement
+				# 	(11 - j * 2)		   # y
+				# ].inches
+
 				pdf_progress.increment
 				debug_progress += 1
 			end
@@ -121,6 +126,8 @@ Document.generate "deck_sheets.pdf", margin: 0 do |pdf|
 					 sets_printed_count + (i * SCRAP_COL_SIZE + j)
 				)
 
+				# puts current_card
+
 				next if current_card.to_i >= SCRAP_COUNT / 2
 
 				pdf.image(
@@ -133,6 +140,11 @@ Document.generate "deck_sheets.pdf", margin: 0 do |pdf|
 						].inches
 					}
 				)
+
+				# pdf.text_box current_card.to_s, at: [
+				# 	(i * 2),     # x - left to right placement
+				# 	(11 - j * 2) # y
+				# ].inches
 
 				pdf_progress.increment
 				debug_progress += 1
@@ -152,7 +164,7 @@ Document.generate "deck_sheets.pdf", margin: 0 do |pdf|
 				"#{PILOT_FRONTS}#{current_card}.png",
 				{
 					width: 2.5.inches,
-					at: [(i * 2.5) + 0.5, (10.5 - j * 3.75)].inches
+					at: [(i * 2.5) + 0.5, (10.5 - j * 3.72)].inches
 				}
 			)
 
@@ -163,3 +175,5 @@ Document.generate "deck_sheets.pdf", margin: 0 do |pdf|
 	# puts "#{debug_progress}"
 	puts "Made #{pdf.page_count} pages. Writing to file @ deck_sheets.pdf..."
 end
+
+system %{open deck_sheets.pdf}
