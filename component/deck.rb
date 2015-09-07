@@ -67,9 +67,9 @@ Deck.new(DECK_CONFIG) do
 	text str: data["name"],          y: "0.2in",          layout: "header"
 	text str: buffer["meta"],        y: "0.45in",           layout: "meta"
 	text str: buffer["meta2"],       y: "0.63in",          layout: "meta"
-	text str: buffer["elec"],        y: Y_POS[0],          layout: "blue"
-	text str: buffer["incin"],       y: buffer["incin_y"], layout: "red"
-	text str: buffer["corro"],       y: buffer["corro_y"], layout: "green"
+	text str: buffer["elec"],        y: Y_POS[0],          layout: "gray"
+	text str: buffer["incin"],       y: buffer["incin_y"], layout: "gray"
+	text str: buffer["corro"],       y: buffer["corro_y"], layout: "gray"
 	text str: data["effect"],        y: "1.7in",           layout: "paragraph"
 
 	text str: buffer["weapon"],      y: "2.15in",             layout: "subheader"

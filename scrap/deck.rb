@@ -109,15 +109,15 @@ Deck.new(DECK_CONFIG) do
 	buffer = remapped_data.row_map do |row, new_row|
 		case row["rarity"]
 		when "*"
-			new_row["rarity_color"] = "brass"
+			new_row["rarity_color"] = "•"
 		when "**"
-			new_row["rarity_color"] = "silver"
+			new_row["rarity_color"] = "♦"
 		when "***"
-			new_row["rarity_color"] = "gold"
+			new_row["rarity_color"] = "★"
 		when "e"
-			new_row["rarity_color"] = "black"
+			new_row["rarity_color"] = "Δ"
 		when "r"
-			new_row["rarity_color"] = "purple"
+			new_row["rarity_color"] = "®"
 		end
 		new_row
 	end
@@ -125,7 +125,7 @@ Deck.new(DECK_CONFIG) do
 	background color: "#fff"
 	rect width: "2in", height: "2in", stroke_color: :black, stroke_width: 60
 
-	text str: "+", layout: buffer["rarity_color"]
+	text str: buffer["rarity_color"], layout: "black"
 
 	save_png prefix: "scrap_back_"
 end
