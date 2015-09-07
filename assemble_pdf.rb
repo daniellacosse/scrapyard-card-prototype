@@ -17,10 +17,10 @@ PILOT_ROW_SIZE, PILOT_COL_SIZE = 3, 2
 PILOT_FRONTS = "pilots/pilot_"
 PILOT_COUNT = Dir["pilots/*"].length
 
+PRINTER_ERROR_Y = 0.0625
+
 pdf_progress = ProgressBar.create(
-	title: "Placing Cards:",
-	total: nil,
-	format: "%t <%B> %p%% %a"
+	title: "Placing Cards:", total: nil, format: "%t <%B> %a"
 )
 
 debug_progress = 0
@@ -44,7 +44,7 @@ Document.generate "deck_sheets.pdf", margin: 0 do |pdf|
 						width: 2.5.inches,
 						at: [
 							(8.5 - (i + 1) * 2.5), # x - right to left placement
-							(11 - j * 3.5)		     # y
+							(11 - PRINTER_ERROR_Y - j * 3.5)		     # y
 						].inches
 					}
 				)
@@ -103,7 +103,7 @@ Document.generate "deck_sheets.pdf", margin: 0 do |pdf|
 						width: 2.inches,
 						at: [
 							(8.5 - (i + 1) * 2), # x - right to left placement
-							(11 - j * 2)		   # y
+							(11 - PRINTER_ERROR_Y - j * 2)		   # y
 						].inches
 					}
 				)
