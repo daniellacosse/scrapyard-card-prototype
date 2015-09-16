@@ -123,9 +123,13 @@ Deck.new(DECK_CONFIG) do
 	end
 
 	background color: "#fff"
-	rect width: "2in", height: "2in", stroke_color: :black, stroke_width: 60
+	rect width: "1.9in", height: "1.9in", x: "0.05in", y: "0.05in", stroke_color: :black, stroke_width: 50
 
 	text str: buffer["rarity_color"], layout: "black"
+	text str: buffer["rarity_color"], layout: "black", x: "0.05in", y: "-0.5in"
+	text str: buffer["rarity_color"], layout: "black", x: "0.05in", y: "1in"
+	text str: buffer["rarity_color"], layout: "black", x: "1.6in", y: "-0.5in"
+	text str: buffer["rarity_color"], layout: "black", x: "1.6in", y: "1in"
 
 	save_png prefix: "scrap_back_"
 end
