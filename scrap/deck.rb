@@ -79,10 +79,10 @@ DECK_CONFIG = {
 Deck.new(DECK_CONFIG) do
 	buffer = remapped_data.row_map do |row, new_row|
 		# create text strings based on row values
-		new_row["plys"] = if_truthy(row["polymers"]) { |ply| "#{ply} Polymers" }
-		new_row["cers"] = if_truthy(row["ceramics"]) { |cer| "#{cer} Ceramics" }
-		new_row["alys"] = if_truthy(row["alloys"]) { |aly| "#{aly} Alloys" }
-		new_row["slvs"] = if_truthy(row["is_salvageable"]) { "Salvageable!" }
+		new_row["plys"] = "Polymer" if row["potentcy"] =~ /POLY/
+		new_row["cers"] = "Ceramic" if row["potentcy"] =~ /CER/
+		new_row["alys"] = "Alloy" if row["potentcy"] =~ /ALLOY/
+		new_row["slvs"] = if_truthy(row["salvageable"]) { "Salvageable!" }
 
 		# determine y position of text strings based on the others' exsistence
 		new_row["cers_y"] = Y_POS[[new_row["plys"]].truthy_count]
