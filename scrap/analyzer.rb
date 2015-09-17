@@ -11,7 +11,7 @@ total_common = total_uncommon = total_rare = 0
 total = 0
 
 scraps.each do |row|
-	name, rarity, polymers, alloys, ceramics = *row
+	name, clas, rarity, potentcy, has_event, event_effect, salvageable = *row
 	polymers ||= 0; alloys ||= 0; ceramics ||= 0
 	next if row.compact.count == 0
 
@@ -30,9 +30,17 @@ scraps.each do |row|
 		total_rare += count
 	end
 
-	total_polymers += polymers.to_i * count
-	total_alloys += alloys.to_i * count
-	total_ceramics += ceramics.to_i * count
+	if !!(/POLY/ =~ potentcy)
+		total_polymers += 1
+	end
+
+	if !!(/ALLOY/ =~ potentcy)
+		total_alloys += 1
+	end
+
+	if !!(/CER/ =~ potentcy)
+		total_ceramics += 1
+	end
 end
 
 total_materials = total_polymers + total_alloys + total_ceramics

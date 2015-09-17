@@ -1,5 +1,6 @@
 require "squib"
 require "../util"
+require "byebug"
 include Squib
 
 Y_POS = ["0.55in", "0.8in", "1.05in"]
@@ -57,7 +58,6 @@ until reserve_count <= 0
 	mappings.delete_if { |row| row.first == "Animal Trophy" }
 
 	weakest_link = mappings.min { |a, b| a.last.to_i <=> b.last.to_i }
-
 	data_row = data.select { |row| row[0] == weakest_link.first }.first
 	keys.each_with_index { |key, j| remapped_data[key] << data_row[j] }
 
@@ -79,9 +79,9 @@ DECK_CONFIG = {
 Deck.new(DECK_CONFIG) do
 	buffer = remapped_data.row_map do |row, new_row|
 		# create text strings based on row values
-		new_row["plys"] = "Polymer" if row["potentcy"] =~ /POLY/
-		new_row["cers"] = "Ceramic" if row["potentcy"] =~ /CER/
-		new_row["alys"] = "Alloy" if row["potentcy"] =~ /ALLOY/
+		new_row["plys"] = "Polymer" if !!(/POLY/ =~ row["potentcy"])
+		new_row["cers"] = "Ceramic" if !!(/CER/ =~ row["potentcy"])
+		new_row["alys"] = "Alloy" if !!(/ALLOY/ =~ row["potentcy"])
 		new_row["slvs"] = if_truthy(row["salvageable"]) { "Salvageable!" }
 
 		# determine y position of text strings based on the others' exsistence

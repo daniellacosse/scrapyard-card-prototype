@@ -66,11 +66,18 @@ class Hash
 			end
 		end
 
+		mapped_keys = keys
+
 		# (2) map that array with the given block
-		rows.map! { |row| row.merge yield(row, {}) }
+		rows.map! do |row|
+			merged_row = row.merge yield(row, {})
+			mapped_keys += merged_row.keys
+			mapped_keys.uniq!
+			merged_row
+		end
 
 		# (3) then the row keys back into a hash
-		rows.first.keys.each do |key|
+		mapped_keys.each do |key|
 			self[key] = rows.collect { |row| row[key] }
 		end
 
