@@ -26,7 +26,7 @@ In coarse terms, the metric is the overall power of the part / the overall cost 
  - the part's resilience
  - the part's inverse weight (?)
  - the part's weapon damage
- - the part's weapon accuracy (as a percentage)
+ - the part's weapon accuracy -(as a percentage)-
  - the part's weapon's number of valid targets
 
 *effects* on a part are either desirable (**+**) or undesirable (**-**). add these up accordingly to get the number of effects
@@ -43,7 +43,7 @@ there are three "*flags*". However, one of them has a "half-false" state:
 
 *required rank* is just the engineering rank needed to do the schematic
 
-an *average group cost* refers to the average of the costs of all the possibilities in a requirement group. all the alternative means for meeting the same end. each "means" has a cost equal to the total raw value of that means divided by the difficulty of obtaining those specific pieces (aka the number of scraps like it / the total number of scraps). the raw "override" has no difficulty associated with it. 
+an *average group cost* refers to the average of the costs of all the possibilities in a requirement group. all the alternative means for meeting the same end. each "means" has a cost equal to the total raw value of that means divided by the difficulty of obtaining those specific pieces (aka the number of scraps like it / the total number of scraps). the raw "override" has no difficulty associated with it.
 
 > so if a group had three possibilities:
 	> 1. Automobile (value 10, rarity 0.01) **difficulty 1000**

@@ -129,5 +129,50 @@ CSV.open("results.csv", "wb") do |csv|
 	scrap_counts[:agg].each { |row| csv << [row[:scrap], row[:copies]] }
 end
 
-puts "Done! Wrote results to CSV!"
+puts "Wrote results to CSV!"
 puts ""
+
+def blueprint_cost(blueprint_row) {
+	sub_row = blueprint_row[3..7]
+	requirement_options = []
+
+	sub_row.each do |requirement|
+		option_costs = []
+
+		requirement.split(", ").each do |option|
+			option_value, option_rarity = 0, 1
+
+			option.split(/ & /).each do |option_ingredient|
+				if (/Override/ =~ option_ingredient)
+					option_value += option_ingredient[/\D (\d)/, 1].to_i
+				elsif (/.* \(\d\)/ =~ option_ingredient)
+					# find option_ingredient
+					ingredient = scrap_counts[:agg].select do |scrap|
+						scrap[:name] == option_ingredient
+					end.first
+
+					ingredient_count = option_ingredient[/.* \((\d)\)/, 1].to_i
+					option_value += ingredient_count * ingredient[:value]
+					option_rarity *= ingredient_count * ingredient[:percent]
+				else
+					if_truthy option_ingredient do
+						# find option_ingredient
+						ingredient = scrap_counts[:agg].select do |scrap|
+							scrap[:name] == option_ingredient
+						end.first
+
+						ingredient_count = option_ingredient[/.* \((\d)\)/, 1].to_i
+						option_value += ingredient_count * ingredient[:value]
+						option_rarity *= ingredient_count * ingredient[:percent]
+					end
+				end
+			end
+
+			option_costs << option_value / option_rarity
+		end
+
+		requirement_options << option_costs.mean if option_costs.count > 0
+	end
+
+	blueprint_row[:rank].to_f * Math.log(requirement_options.sum)
+end
