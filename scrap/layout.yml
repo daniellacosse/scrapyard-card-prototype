@@ -38,3 +38,15 @@ black:
 purple:
    extends: middle
    color: purple
+top_green:
+   extends: middle
+   color: green
+yellow_green:
+   extends: middle
+   color: "#d4e737"
+orange:
+   extends: middle
+   color: orange
+bottom_orange_red:
+   extends: middle
+   color: "#ff5a00"

@@ -1,0 +1,24 @@
+fullwidth:
+   width: 2.1in
+   x: 0.2in
+   align: center
+   font: Open Sans,Regular 72
+header:
+   extends: fullwidth
+   font: Open Sans,Bold 72
+number:
+   align: left
+   height: 0.75in
+   width: 0.5in
+   x: 0.2in
+   font: Open Sans,Regular 72
+   wrap: true
+list:
+   extends: number
+   width: 2in
+   x: 0.6in
+   font: Open Sans,Regular 48
+bottom_right:
+   x: 2.2in
+   y: 3.2in
+   font: Open Sans,Regular 48

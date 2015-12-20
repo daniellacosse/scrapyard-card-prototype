@@ -2,13 +2,14 @@ require "open-uri"
 require "json"
 require "deep_clone"
 require "csv"
+require "openssl"
 
 def open_gsheet(filepath)
 	# (1) open gdoc
 	gdoc = JSON.parse(File.read(filepath))
 
 	# (2) pull down sheet from gdoc url
-	buffer = open("https://docs.google.com/spreadsheets/d/#{gdoc['doc_id']}/export?format=csv").read
+	buffer = open("https://docs.google.com/spreadsheets/d/#{gdoc['doc_id']}/export?format=csv", ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE).read
 
 	# (3) stuff into local csv
 	File.open("cache.csv", "w") { |file| file << buffer }
@@ -85,7 +86,7 @@ class Hash
 	end
 
 	def row_map
-		DeepClone.clone(self).row_map! { |row| yield(row, {}) }
+		self.__deep_clone__.row_map! { |row| yield(row, {}) }
 	end
 
 	# def map_values!

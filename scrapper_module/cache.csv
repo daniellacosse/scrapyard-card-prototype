@@ -1,0 +1,62 @@
+id,name,mod_type,armor,res,weight,gives_digging,gives_flying,weapon,weapon_targets,weapon_dmg,weapon_acc,effects
+23,Air Glider,LEG,6,0,*,FALSE,FALSE,FALSE,,,,(+) You may move your scrapper over terrain as if it were frozen.
+1,Atomizing Barrier,ARM,20,1,4,FALSE,FALSE,FALSE,,,,(+) Scrapper gains an additional movement for each 5 armor lost on this module.
+47,Bastard Cannon,ARM,12,1,3,FALSE,FALSE,RANGED,ANY_MODULE,6,10,(+) Weapon can only fire if it didn't fire on your last turn.
+16,Bio-Grenade Launcher,ARM,8,1,3,FALSE,FALSE,RANGED,SCRAPPER,3,6,(+) Corrosive.
+41,Bola,ARM,4,2,2,FALSE,FALSE,RANGED,"LEG, CONTESTANT",2,8,(+) Ensnaring.
+32,Broadside Cannons,ARM,7,2,4,FALSE,FALSE,RANGED,ANY_MODULE,3,4,(+) Weapon can fire up to 3 times a turn.
+3,Burst Thruster,MOD,,,,FALSE,FALSE,FALSE,,2,,(-) Only applies to MELEE weapons.
+19,Caltrap Hatch,MOD,,,,FALSE,FALSE,MELEE,TERRAIN,*,,"(-) Discard this card on use.
+(+) Trap. Deals 3 damage to the LEGs of the first Scrapper moves onto the attacked terrain. "
+12,Cardboard Target,MOD,1,,,FALSE,FALSE,FALSE,,,,(-) Opponents must target this module whenever possible.
+10,Centcar Body,LEG,11,4,1,FALSE,FALSE,FALSE,,,,(-) Counts as two LEG modules. (it can have two MODs)
+46,Drillpoon,ARM,6,3,3,TRUE,FALSE,RANGED,ANY_MODULE,3,9,"(+) Weapon can be used underground.
+(-) Weapon can only be used underground."
+17,Electroencephalographic Prosthetic,LEG,12,0,2,FALSE,FALSE,FALSE,,,,(+) Pilot rank +1.
+40,Electromagnetic Shield,ARM,12,5,4,TRUE,FALSE,MELEE,SCRAPPER,*,6,"(.) Put an ammo token on this module whenever it is damaged.
+(+2) Whenever you attack with this module, remove all tokens from it. It deals that much damage."
+14,Electrotether Maw,ARM,8,5,2,FALSE,FALSE,"RANGED, MELEE","LEG, ARM",4,"9, 12","(+) Electrical.
+(+) On a successful hit, move struck target to your tile."
+28,EMP Console,MOD,,,,FALSE,FALSE,FALSE,,,,"(+) Electrical.
+(-) Electrical effect applies when struck module has a resilience of 4 or less."
+27,Flaming Shield,ARM,16,1,3,FALSE,FALSE,FALSE,,,,"(-) Always on fire.
+(+) Incineratory.
+(+) When struck by a MELEE weapon, that weapon's module takes 2 damage."
+22,Glass Shard Shins,LEG,6,1,2,FALSE,FALSE,MELEE,LEG,2,,"(+) When struck by a MELEE weapon, that weapon's module takes 1 damage."
+37,Glue Gun,ARM,6,1,3,FALSE,FALSE,RANGED,"ANY_MODULE, CONTESTANT",1,8,"(+) Particulate. (On a successful hit, struck module's weapon's accuracy is halved until it fires.)"
+7,Grappling Hook,MOD,,,,FALSE,FALSE,RANGED,"WALL, SCRAPPER",0,9,"(+) On a successful hit, move to the same tile of your target."
+31,Grasshopper,LEG,8,3,3,FALSE,TRUE,TRUE,,,,"(+) This scrapper unfreezes terrain it moves over.
+(+) This scrapper is unaffected by frozen terrain."
+33,Gun on a Rope,ARM,2,2,1,FALSE,FALSE,RANGED,"ANY_MODULE, CONTESTANT",2,,"(.) Starts with 6 ammo tokens. Remove a token whenever you fire this module's weapon.
+(-) Weapon can't fire if this card has no ammo tokens."
+38,Helium Balloons,MOD,,,,FALSE,TRUE,FALSE,,,,(-) Discard this card when the module is damaged.
+21,Hockey Puck Shooter,ARM,6,0,2,FALSE,FALSE,MELEE,LEG,3,,"(+) ""Can hit any valid target over frozen"""
+9,Hypnotic Pendulum,ARM,4,1,2,FALSE,FALSE,FALSE,,,,(+) Obscuring. (Accuracy of RANGED weapons against this Scrapper is halved.)
+29,Irrigator,MOD,,-1,,FALSE,FALSE,FALSE,,,,(+) Particulate Immunity.
+39,Kinetic Field,MOD,,,,FALSE,FALSE,RANGED,ANY_MODULE,*,10,"(.) Put an ammo token on this module whenever it is unsuccessfully attacked.
+(+2) Whenever you attack with this module, remove all tokens from it. It deals that much damage."
+42,Lasso,ARM,4,0,3,FALSE,FALSE,MELEE,"CHASSIS, CONTESTANT",,,(+) Ensnaring.
+18,Mentos Coke Trebuchet,ARM,6,0,2,FALSE,FALSE,RANGED,ANY_MODULE,1,6,"(+) Particulate. (On a successful hit, struck module's weapon's accuracy is halved until it fires.)"
+8,Missile Bay,ARM,8,1,2,FALSE,TRUE,MELEE,SCRAPPER,4,,"(+) Weapon can be used in-flight against targets who aren't in-flight.
+(+) Inflammatory.
+(-) Weapon can't be used while underground."
+6,Mud Sprinkler,ARM,6,3,2,TRUE,FALSE,MELEE,"TERRAIN, LEG",1,,(+) Sludge. (TERRAIN now requires an additional movement to clear. Can be dug into mid-turn.)
+35,Napalm Mine Thrower,ARM,8,3,3,FALSE,FALSE,RANGED,TERRAIN,*,9,"(+) Inflammatory.
+(+) Trap. Deals 3 damage to the LEGs of the first Scrapper that moves onto the attacked terrain. "
+36,Party Cannon,ARM,7,0,2,FALSE,FALSE,RANGED,*,*,*,(+) Roll the die when you fire this weapon. 1-2: 1 damage to the whole Scrapper. 3-5: 2 damage. Corrosive.  6-8: 3 damage.
+11,Pheromone Emmiter,MOD,,,,FALSE,FALSE,FALSE,,,,???
+44,Pogo Stick,LEG,6,0,1,FALSE,FALSE,FALSE,,,,(+) Your Scrapper can attack in-flight targets with MELEE weapons.
+4,Reinforced Beach Umbrella,ARM,6,1,1,FALSE,FALSE,MELEE,ANY_MODULE,2,,"(+) At start of turn, choose attack mode or defense mode. While in defense mode, this module loses its weapon and has double armor."
+30,Remote Control,MOD,,,,FALSE,FALSE,FALSE,,,,(+) Your Scrapper can move and fire its weapons when it's not being piloted.
+2,Smokestack,LEG,10,2,3,FALSE,FALSE,FALSE,,,,(+) Obscuring. (Accuracy of RANGED weapons against this Scrapper is halved.)
+13,Strobelight,MOD,,,,FALSE,FALSE,FALSE,,,,(+) Obscuring. (Accuracy of RANGED weapons against this Scrapper is halved.)
+45,Swivel Top,LEG,7,2,5,FALSE,FALSE,FALSE,,,,(+) Your Scrapper can use one of its MELEE weapons twice a turn.
+26,Taxidermied Head,MOD,,,,FALSE,FALSE,FALSE,,,,(.) No effect. (Except style.)
+5,Tesla Coil,MOD,,1,,FALSE,FALSE,FALSE,,,,???
+34,Toxic Drillsaw,ARM,10,3,3,TRUE,FALSE,TRUE,,5,,(+) Weapon deals 1 addtional damage for each of your Scrapper's ARMs.
+15,Tranq Rifle,ARM,???,???,???,FALSE,FALSE,RANGED,CHASSIS,,???,"(+) On a successful hit, reduce the struck contestant's piloting rank by one until the end of their next turn."
+24,Tri Treads,LEG,7,3,3,TRUE,FALSE,FALSE,,,,(+) Rough terrain doesn't affect your scrapper.
+43,Tungsten Vicegrip,ARM,10,3,4,FALSE,FALSE,MELEE,ARM,3,,(+) Ensnaring.
+20,Windmill Helicopter,ARM,7,2,2,FALSE,TRUE,MELEE,ARM,2,,???
+25,Zamboni,LEG,8,0,4,FALSE,FALSE,FALSE,,,,"(+) This scrapper freezes terrain it moves over. 
+(+) This scrapper is unaffected by frozen terrain."

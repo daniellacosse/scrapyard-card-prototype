@@ -22,7 +22,7 @@ def component_power(component_row)
 		component_row[WEP_ACC_IDX]
 	].map(&:to_f).sum
 
-	effect_count = component_row[EFFECTS_IDX].split(/,\s*/)
+	effect_count = component_row[EFFECTS_IDX].split("\n")
 	effect_count.map! do |effect|
 		value = 1 if !!(/^\(\+\)/ =~ effect)
 		value = -1 if !!(/^\(\-\)/ =~ effect)

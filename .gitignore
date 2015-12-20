@@ -4,9 +4,11 @@ component/cache.csv
 blueprint/cache.csv
 blueprint/results.csv
 scrap/cache.csv
+contestant/cache.csv
 
-component/_output
+scrapper_module/_output
 blueprint/_output
 scrap/_output
+contestant/_output
 
 sheets
