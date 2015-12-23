@@ -36,7 +36,7 @@ Deck.new(DECK_CONFIG) do
 
 	text str: buffer["ability"], y: "1in", layout: "list"
 
-	save_png prefix: "contestant_build"
+	save_png prefix: "contestant_build_"
 end
 
 # combat build
@@ -65,5 +65,5 @@ Deck.new(DECK_CONFIG) do
 
 	text str: buffer["ability"], y: "1in", layout: "list"
 
-	save_png prefix: "contestant_combat"
+	save_png prefix: "contestant_combat_"
 end

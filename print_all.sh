@@ -19,7 +19,7 @@ echo && cd ../scrap/
 ruby get_cache.rb # get scrap cache for blueprint analysis
 
 cd ../blueprint/
-# ruby analyzer.rb # spits out inferred scrap card counts
+ruby analyzer.rb # spits out inferred scrap card counts
 
 #(3.2)
 printf "Printing Scraps..."
@@ -29,7 +29,7 @@ ruby deck.rb
 
 # (4)
 printf "Printing Contestants..."
-echo && cd ../contestants/
+echo && cd ../contestant/
 ruby deck.rb
 
 # (5)

@@ -78,40 +78,29 @@ scrap_counts = {}.tap do |hsh|
 			count = count.to_f
 			str = str.gsub(/\s+\(\d\)$/, "")
 
-			# word_location = agg.index { |el| str == el[:scrap] }
-
 			if !!agg[str]
-				agg[str][:number] += count || 1
+				agg[str] += count || 1
 			else
-				# if class (aka [] notation) class: true
-				# is_class = true if (/^\[.*\]$/ =~ str)
-
-				agg[str] { number: count || 1.0 }
+				agg[str] = count || 1.0
 			end
 		end
 	end
 
-	# hsh[:total] = hsh[:agg].map { |el| el[:number] }.inject(:+)
-	# hsh[:agg].map! do |el|
-	# 	el[:percent] = el[:number] / hsh[:total]
-	# 	el[:copies] = (el[:percent] * SCRAP_DECK_SIZE).round.to_i
-	# 	el[:copies] = 1 if el[:copies] == 0
-	# 	el
-	# end
-
 	hsh[:importance_model] = {}.tap do |importance_model|
 		scraps.each do |scrap|
-			name = scrap[0]
+			name = scrap.first
 			classes = scrap[1].split(", ")
+			next if !hsh[:agg][name]
 
-			importance_model[name] = classes
-				.map { |class_name| hsh[:agg][class_name][:count] }
-				.mean * hsh[:agg][name][:count]
+			result = classes.map { |class_name| hsh[:agg]["[#{class_name}]"] }
+			result = result.compact.mean * hsh[:agg][name]
+
+			importance_model[name] = result
 		end
 	end
 end
 
-importance_sum = hsh[:importance_model].values.sum
+importance_sum = scrap_counts[:importance_model].values.sum
 
 # proxy_costs.reject! { |el| el <= 2 }
 # puts ""
@@ -142,14 +131,14 @@ importance_sum = hsh[:importance_model].values.sum
 # 	puts ""
 # end
 
-if (SCRAP_DECK_SIZE - rounded_deck_counts.sum) != 0
+# if (SCRAP_DECK_SIZE - rounded_deck_counts.sum) != 0
 	# TODO: suggest revisions
 	# => remove x from the highest count
 	# => then next lowest count
 	# => then highest count
 	# => then next lowest count
 	# => then next next... and so on, until offset is ~0
-end
+# end
 
 CSV.open("results.csv", "wb") do |csv|
 	scrap_counts[:agg].keys.each do |scrap_name|
@@ -158,9 +147,10 @@ CSV.open("results.csv", "wb") do |csv|
 		# 	# or maybe this is the scrap deck's job.
 		# ].join(", ")
 
+		next unless !!scrap_counts[:importance_model][scrap_name]
 		csv << [
 			scrap_name,
-			(scrap_counts[:importance_model][scrap_name] / importance_sum) * SCRAP_DECK_SIZE
+			((scrap_counts[:importance_model][scrap_name] / importance_sum) * SCRAP_DECK_SIZE).ceil
 		]
 	end
 end
@@ -168,47 +158,47 @@ end
 puts "Wrote results to CSV!"
 puts ""
 
-def blueprint_cost(blueprint_row) {
-	sub_row = blueprint_row[3..7]
-	requirement_options = []
-
-	sub_row.each do |requirement|
-		option_costs = []
-
-		requirement.split(", ").each do |option|
-			option_value, option_rarity = 0, 1
-
-			option.split(/ & /).each do |option_ingredient|
-				if (/Override/ =~ option_ingredient)
-					option_value += option_ingredient[/\D (\d)/, 1].to_i
-				elsif (/.* \(\d\)/ =~ option_ingredient)
-					# find option_ingredient
-					ingredient = scrap_counts[:agg].select do |scrap|
-						scrap[:name] == option_ingredient
-					end.first
-
-					ingredient_count = option_ingredient[/.* \((\d)\)/, 1].to_i
-					option_value += ingredient_count * ingredient[:value]
-					option_rarity *= ingredient_count * ingredient[:percent]
-				else
-					if_truthy option_ingredient do
-						# find option_ingredient
-						ingredient = scrap_counts[:agg].select do |scrap|
-							scrap[:name] == option_ingredient
-						end.first
-
-						ingredient_count = option_ingredient[/.* \((\d)\)/, 1].to_i
-						option_value += ingredient_count * ingredient[:value]
-						option_rarity *= ingredient_count * ingredient[:percent]
-					end
-				end
-			end
-
-			option_costs << option_value / option_rarity
-		end
-
-		requirement_options << option_costs.mean if option_costs.count > 0
-	end
-
-	blueprint_row[:rank].to_f * Math.log(requirement_options.sum)
-end
+# def blueprint_cost(blueprint_row) {
+# 	sub_row = blueprint_row[3..7]
+# 	requirement_options = []
+#
+# 	sub_row.each do |requirement|
+# 		option_costs = []
+#
+# 		requirement.split(", ").each do |option|
+# 			option_value, option_rarity = 0, 1
+#
+# 			option.split(/ & /).each do |option_ingredient|
+# 				if (/Override/ =~ option_ingredient)
+# 					option_value += option_ingredient[/\D (\d)/, 1].to_i
+# 				elsif (/.* \(\d\)/ =~ option_ingredient)
+# 					# find option_ingredient
+# 					ingredient = scrap_counts[:agg].select do |scrap|
+# 						scrap[:name] == option_ingredient
+# 					end.first
+#
+# 					ingredient_count = option_ingredient[/.* \((\d)\)/, 1].to_i
+# 					option_value += ingredient_count * ingredient[:value]
+# 					option_rarity *= ingredient_count * ingredient[:percent]
+# 				else
+# 					if_truthy option_ingredient do
+# 						# find option_ingredient
+# 						ingredient = scrap_counts[:agg].select do |scrap|
+# 							scrap[:name] == option_ingredient
+# 						end.first
+#
+# 						ingredient_count = option_ingredient[/.* \((\d)\)/, 1].to_i
+# 						option_value += ingredient_count * ingredient[:value]
+# 						option_rarity *= ingredient_count * ingredient[:percent]
+# 					end
+# 				end
+# 			end
+#
+# 			option_costs << option_value / option_rarity
+# 		end
+#
+# 		requirement_options << option_costs.mean if option_costs.count > 0
+# 	end
+#
+# 	blueprint_row[:rank].to_f * Math.log(requirement_options.sum)
+# end

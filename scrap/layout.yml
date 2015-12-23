@@ -20,7 +20,7 @@ bottomright:
    y: 1.5in
    font: Open Sans,Regular 20
 middle:
-   font: Open Sans,Bold 500
+   font: Open Sans,Bold 72
    x: 0.7in
    y: 0.2in
 brass:

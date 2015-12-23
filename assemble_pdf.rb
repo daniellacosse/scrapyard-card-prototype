@@ -5,8 +5,8 @@ include Prawn
 
 BPRINT_ROW_SIZE, BPRINT_COL_SIZE = 3, 3
 BPRINT_FRONTS = "blueprint/_output/bprint_"
-BPRINT_BACKS = "component/_output/comp_"
-BPRINT_COUNT = Dir["component/_output/*"].length
+BPRINT_BACKS = "scrapper_module/_output/module_"
+BPRINT_COUNT = Dir["scrapper_module/_output/*"].length
 
 SCRAP_ROW_SIZE, SCRAP_COL_SIZE = 4, 5
 SCRAP_FRONTS = "scrap/_output/scrap_"
@@ -14,8 +14,9 @@ SCRAP_BACKS = "scrap/_output/scrap_back_"
 SCRAP_COUNT = Dir["scrap/_output/*"].length
 
 PILOT_ROW_SIZE, PILOT_COL_SIZE = 3, 2
-PILOT_FRONTS = "pilots/pilot_"
-PILOT_COUNT = Dir["pilots/*"].length
+PILOT_FRONTS = "contestant/_output/contestant_build_"
+PILOT_BACKS = "contestant/_output/contestant_combat_"
+PILOT_COUNT = Dir["contestant/_output/*"].length
 
 PRINTER_ERROR_Y = 0.0
 PRINTER_ERROR_X = 0.125
@@ -165,7 +166,7 @@ Document.generate "sheets/scrap_sheets.pdf", margin: 0 do |pdf|
 	puts "Made #{pdf.page_count} pages. Writing to file @ scrap_sheets.pdf..."
 end
 
-Document.generate "sheets/pilot_sheets.pdf", margin: 0 do |pdf|
+Document.generate "sheets/contestant_sheets.pdf", margin: 0 do |pdf|
 	PILOT_ROW_SIZE.times do |i|
 		PILOT_COL_SIZE.times do |j|
 			current_card = dbl_digits i * PILOT_COL_SIZE + j
@@ -175,7 +176,10 @@ Document.generate "sheets/pilot_sheets.pdf", margin: 0 do |pdf|
 				"#{PILOT_FRONTS}#{current_card}.png",
 				{
 					width: 2.5.inches,
-					at: [(i * 2.5) + 0.5, (10.5 - j * 3.72)].inches
+					at: [
+						(8.5 - (i + 1) * 2.5), # x - right to left placement
+						(11 - PRINTER_ERROR_Y - j * 3.5)		     # y
+					].inches
 				}
 			)
 
@@ -183,6 +187,30 @@ Document.generate "sheets/pilot_sheets.pdf", margin: 0 do |pdf|
 			debug_progress += 1
 		end
 	end
+
+	pdf.start_new_page
+
+	PILOT_ROW_SIZE.times do |i|
+		PILOT_COL_SIZE.times do |j|
+			current_card = dbl_digits i * PILOT_COL_SIZE + j
+			next if current_card.to_i >= PILOT_COUNT
+
+			pdf.image(
+				"#{PILOT_BACKS}#{current_card}.png",
+				{
+					width: 2.5.inches,
+					at: [
+						(i * 2.5 + PRINTER_ERROR_X), 		# x - left to right placement
+						(11 - j * 3.5) # y
+					].inches
+				}
+			)
+
+			pdf_progress.increment
+			debug_progress += 1
+		end
+	end
+
 	# puts "#{debug_progress}"
 	puts "Made #{pdf.page_count} pages. Writing to file @ pilot_sheets.pdf..."
 end

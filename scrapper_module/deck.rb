@@ -34,8 +34,11 @@ Deck.new(DECK_CONFIG) do
 		new_row["weapon_meta"] = [
 			if_truthy(row["weapon_dmg"]) { "Damage: #{row['weapon_dmg']}" },
 			if_truthy(row["weapon_acc"]) { "Acc: #{row['weapon_acc']}" },
-			if_truthy(row["weapon_targets"]) { "Targets: #{row['weapon_targets']}}" }
 		].compact.join ", "
+
+		new_row["weapon_targets"] = if_truthy(row["weapon_targets"]) do
+			"Targets: #{row['weapon_targets']}"
+		end
 
 		new_row
 	end
@@ -48,11 +51,12 @@ Deck.new(DECK_CONFIG) do
 	text str: buffer["meta2"],       y: "0.63in",          layout: "meta"
 	text str: buffer["weapon"],      y: "0.9in",             layout: "subheader"
 	text str: buffer["weapon_meta"], y: "1.05in",          layout: "meta"
+	text str: buffer["weapon_targets"], y: "1.2in",          layout: "meta"
 
-	text str: data["effects"],        y: "1.3in",           layout: "paragraph"
+	text str: data["effects"],        y: "1.5in",           layout: "paragraph"
 
 
 	text str: data["id"], layout: "bottom_right"
 
-	save_png prefix: "comp_"
+	save_png prefix: "module_"
 end

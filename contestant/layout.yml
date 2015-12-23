@@ -16,7 +16,7 @@ number:
 list:
    extends: number
    width: 2in
-   x: 0.6in
+   x: 0.25in
    font: Open Sans,Regular 48
 bottom_right:
    x: 2.2in
