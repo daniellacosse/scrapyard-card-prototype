@@ -55,18 +55,32 @@ data.each_with_index do |data_row, i|
 
 			percent_complete = pass.to_f / number
 			skewed_layer = 0
-			p thresholds
-			p percent_complete, thresholds[skewed_layer]
 			until percent_complete <= thresholds[skewed_layer]
 				skewed_layer += 1
 			end
 
-			remapped_data["layer"] << skewed_layer
+			# shut up i don't care
+			counts = Hash[
+				remapped_data["layer"]
+					.each_with_object(Hash.new(0)) { |word, counts| counts[word] += 1 }
+			]
+
+			if skewed_layer == 3
+				remapped_data["layer"] << skewed_layer
+			elsif counts[skewed_layer + 1].to_i <= counts[skewed_layer].to_i
+				remapped_data["layer"] << skewed_layer + 1
+			else
+				remapped_data["layer"] << skewed_layer
+			end
 		end
 	end
 end
 
-puts remapped_data["layer"].each_with_object(Hash.new(0)) { |word,counts| counts[word] += 1 }
+puts Hash[
+	remapped_data["layer"]
+		.each_with_object(Hash.new(0)) { |word, counts| counts[word] += 1 }
+		.sort
+]
 
 DECK_CONFIG = {
 	layout: "layout.yml",

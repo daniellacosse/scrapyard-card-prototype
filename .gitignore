@@ -1,6 +1,6 @@
 Gemfile.lock
 
-component/cache.csv
+scrapper_module/cache.csv
 blueprint/cache.csv
 blueprint/results.csv
 scrap/cache.csv

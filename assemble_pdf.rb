@@ -19,7 +19,7 @@ PILOT_BACKS = "contestant/_output/contestant_combat_"
 PILOT_COUNT = Dir["contestant/_output/*"].length
 
 PRINTER_ERROR_Y = 0.0
-PRINTER_ERROR_X = 0.125
+PRINTER_ERROR_X = 0.0
 
 pdf_progress = ProgressBar.create(
 	title: "Placing Cards:", total: nil, format: "%t <%B> %a"

@@ -1,7 +1,7 @@
 require "csv"
 require "colorize"
 require "../util"
-SCRAP_DECK_SIZE = 340
+SCRAP_DECK_SIZE = 250
 AVERAGE_SCRAP_VALUE = 1
 
 puts ""

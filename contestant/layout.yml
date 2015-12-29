@@ -18,6 +18,9 @@ list:
    width: 2in
    x: 0.25in
    font: Open Sans,Regular 48
+bold:
+  extends: list
+  font: Open Sans,Bold 48
 bottom_right:
    x: 2.2in
    y: 3.2in

@@ -12,6 +12,7 @@ DECK_CONFIG = {
 
 Deck.new(DECK_CONFIG) do
 	data = csv file: "cache.csv"
+	module_data = csv file: "../scrapper_module/cache.csv"
 	buffer = data.row_map do |row, new_row|
 		new_row["header"] = "Blueprint, Rank #{row['rank']}"
 		if_truthy(row["rq1"]) do |req1|
@@ -38,15 +39,22 @@ Deck.new(DECK_CONFIG) do
 		new_row
 	end
 
+	module_buffer = module_data.row_map do |row, new_row|
+		new_row["meta"] = "#{row['name']}, #{row['mod_type']}"
+
+		new_row
+	end
+
 	background color: "white"
 
 	rect width: "2.5in", height: "3.5in", stroke_color: :black, stroke_width: 25
 	text str: buffer["header"], y: "0.2in", layout: "header"
+	text str: module_buffer["meta"], y: "0.5in", layout: "header"
 
-	text str: buffer["rq1_val"], y: "0.5in", layout: "number"
-	ext1 = text str: buffer["rq1"], y: "0.55in", layout: "list"
+	text str: buffer["rq1_val"], y: "0.8in", layout: "number"
+	ext1 = text str: buffer["rq1"], y: "0.8in", layout: "list"
 
-	ext = ext1.map { |text| "#{text[:height]/600.0 + 0.65}in" }
+	ext = ext1.map { |text| "#{text[:height]/600.0 + 0.95}in" }
 
 	text str: buffer["rq2_val"], y: ext, layout: "number"
 	ext2 = text str: buffer["rq2"], y: ext, layout: "list"

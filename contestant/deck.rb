@@ -30,7 +30,7 @@ Deck.new(DECK_CONFIG) do
 	rect width: "2.5in", height: "3.5in", stroke_color: :black, stroke_width: 25
 	text str: buffer["name"], y: "0.2in", layout: "header"
 
-	text str: buffer["meta"], y: "0.5in", layout: "list"
+	text str: buffer["meta"], y: "0.5in", layout: "bold"
 	text str: buffer["meta2"], y: "0.65in", layout: "list"
 	text str: buffer["meta3"], y: "0.8in", layout: "list"
 
@@ -47,7 +47,7 @@ Deck.new(DECK_CONFIG) do
 
 		new_row["meta"] = "(combat mode)"
 		new_row["meta2"] = "piloting skill: #{row['pilot_skill']}"
-		new_row["meta3"] = "body: #{row['body']}, mind: #{row['mind']}"
+		new_row["meta3"] = "power: #{row['chassis_power']}"
 
 		new_row["ability"] = row["combat_passive"] || row["combat_active"]
 
@@ -59,7 +59,7 @@ Deck.new(DECK_CONFIG) do
 	rect width: "2.5in", height: "3.5in", stroke_color: :black, stroke_width: 25
 	text str: buffer["name"], y: "0.2in", layout: "header"
 
-	text str: buffer["meta"], y: "0.5in", layout: "list"
+	text str: buffer["meta"], y: "0.5in", layout: "bold"
 	text str: buffer["meta2"], y: "0.65in", layout: "list"
 	text str: buffer["meta3"], y: "0.8in", layout: "list"
 

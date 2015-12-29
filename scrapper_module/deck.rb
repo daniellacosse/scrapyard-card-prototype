@@ -16,9 +16,9 @@ Deck.new(DECK_CONFIG) do
 	data = csv file: "cache.csv"
 	buffer = data.row_map do |row, new_row|
 		new_row["meta"] = [
-			row["type"],
-			if_truthy(row["gives_flying"]) { "flys" },
-			if_truthy(row["gives_digging"]) { "digs" }
+			row["mod_type"].downcase,
+			if_truthy(row["gives_flying"]) { "flying" },
+			if_truthy(row["gives_digging"]) { "digging" }
 		].compact.join ", "
 
 		new_row["meta2"] = [
@@ -37,7 +37,7 @@ Deck.new(DECK_CONFIG) do
 		].compact.join ", "
 
 		new_row["weapon_targets"] = if_truthy(row["weapon_targets"]) do
-			"Targets: #{row['weapon_targets']}"
+			"Targets: #{row['weapon_targets'].downcase.gsub("_", " ")}"
 		end
 
 		new_row
