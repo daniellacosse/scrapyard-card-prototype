@@ -103,6 +103,7 @@ Deck.new(DECK_CONFIG) do
 	text str: buffer["classes"], y: Y_POS[0],         layout: "fullwidth"
 	text str: buffer["value"], y:Y_POS[1], layout: "fullwidth"
 	text str: buffer["effects"], y: Y_POS[2],   layout: "paragraph"
+	text str: buffer["id"], y: "1.9in", x: "1.95in", layout: "paragraph"
 
 	save_png prefix: "scrap_"
 end

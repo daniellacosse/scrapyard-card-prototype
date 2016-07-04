@@ -1,6 +1,11 @@
 Gemfile.lock
 
 scrapper_module/cache.csv
+
+scrapper_module/addon_cache.csv
+scrapper_module/limb_cache.csv
+scrapper_module/weapon_cache.csv
+
 blueprint/cache.csv
 blueprint/results.csv
 scrap/cache.csv

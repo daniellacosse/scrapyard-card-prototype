@@ -7,38 +7,61 @@ Y_POS = ["0.9in", "1.15in", "1.4in"]
 DECK_CONFIG = {
 	layout: "layout.yml",
 	height: "3.5in", width: "2.5in",
-	cards: open_gsheet("../mastersheets/master_module_sheet.gsheet"),
 	dpi: 600,
 	config: "config.yml"
 }
 
-Deck.new(DECK_CONFIG) do
-	data = csv file: "cache.csv"
+ADD_DECK_CONFIG = DECK_CONFIG.merge({
+	cards: open_gsheet("../mastersheets/master_addon_sheet.gsheet", "addon_cache.csv")
+})
+
+WEP_DECK_CONFIG = DECK_CONFIG.merge({
+	cards: open_gsheet("../mastersheets/master_weapon_sheet.gsheet", "weapon_cache.csv")
+})
+
+LMB_DECK_CONFIG = DECK_CONFIG.merge({
+	cards: open_gsheet("../mastersheets/master_limb_sheet.gsheet", "limb_cache.csv")
+})
+
+Deck.new(ADD_DECK_CONFIG) do
+	data = csv file: "addon_cache.csv"
 	buffer = data.row_map do |row, new_row|
-		new_row["meta"] = [
-			row["mod_type"].downcase,
-			if_truthy(row["gives_flying"]) { "flying" },
-			if_truthy(row["gives_digging"]) { "digging" }
-		].compact.join ", "
+		new_row["meta"] = if_truthy(row["mobility"]) { row["mobility"] }
+
+		new_row["id"] = "ADD-#{row["add_id"]}"
+
+		new_row
+	end
+
+	background color: "white"
+
+	rect width: "2.5in", height: "3.5in", stroke_color: :black, stroke_width: 25
+	text str: data["name"],    y: "0.2in",   layout: "header"
+	text str: buffer["meta"],  y: "0.45in",  layout: "meta"
+
+	text str: data["text"], y: "0.75in",  layout: "paragraph"
+
+	text str: buffer["id"],                layout: "bottom_right"
+
+	save_png prefix: "add_"
+end
+
+Deck.new(WEP_DECK_CONFIG) do
+	data = csv file: "weapon_cache.csv"
+	buffer = data.row_map do |row, new_row|
+		new_row["meta"] = if_truthy(row["mobility"]) { row["mobility"] }
 
 		new_row["meta2"] = [
-			if_truthy(row["armor"]){ "#{row['armor']} Amr" },
-			if_truthy(row["res"]){ "#{row['res']} Res" },
-			if_truthy(row["weight"]){ "#{row['weight']} Weight" }
+			if_truthy(row["damage"]){ "Damage: #{row["damage"]}" },
+			if_truthy(row["damage_type"]){ "(#{row["damage_type"]})" },
+		].compact.join " "
+
+		new_row["meta3"] = [
+			if_truthy(row["range"]){ "Range: #{row["range"]}" },
+			if_truthy(row["spread"]){ "Spread: #{row["spread"]}" }
 		].compact.join ", "
 
-		new_row["weapon"] = if_truthy(row["weapon"]) do
-			"#{row['weapon_type']} Weapon"
-		end
-
-		new_row["weapon_meta"] = [
-			if_truthy(row["weapon_dmg"]) { "Damage: #{row['weapon_dmg']}" },
-			if_truthy(row["weapon_acc"]) { "Acc: #{row['weapon_acc']}" },
-		].compact.join ", "
-
-		new_row["weapon_targets"] = if_truthy(row["weapon_targets"]) do
-			"Targets: #{row['weapon_targets'].downcase.gsub("_", " ")}"
-		end
+		new_row["id"] = "WEP-#{row["wep_id"]}"
 
 		new_row
 	end
@@ -49,14 +72,44 @@ Deck.new(DECK_CONFIG) do
 	text str: data["name"],          y: "0.2in",          layout: "header"
 	text str: buffer["meta"],        y: "0.45in",           layout: "meta"
 	text str: buffer["meta2"],       y: "0.63in",          layout: "meta"
-	text str: buffer["weapon"],      y: "0.9in",             layout: "subheader"
-	text str: buffer["weapon_meta"], y: "1.05in",          layout: "meta"
-	text str: buffer["weapon_targets"], y: "1.2in",          layout: "meta"
+	text str: buffer["meta3"], y: "1.05in",          layout: "meta"
 
-	text str: data["effects"],        y: "1.5in",           layout: "paragraph"
+	text str: data["text"],        y: "1.5in",           layout: "paragraph"
 
 
-	text str: data["id"], layout: "bottom_right"
+	text str: buffer["id"], layout: "bottom_right"
 
-	save_png prefix: "module_"
+	save_png prefix: "weapon_"
+end
+
+Deck.new(LMB_DECK_CONFIG) do
+	data = csv file: "limb_cache.csv"
+	buffer = data.row_map do |row, new_row|
+		new_row["meta"] = if_truthy(row["mobility"]) { row["mobility"] }
+
+		new_row["armor"] = if_truthy(row["armor"]){ "Armor: #{row["armor"]}"}
+
+		new_row["resilience"] = if_truthy(row["resilience"]){ "Resilience: #{row["resilience"]}"}
+
+		new_row["weight"] = if_truthy(row["weight"]){ "Weight: #{row["weight"]}" }
+
+		new_row["id"] = "LMB-#{row["lmb_id"]}"
+
+		new_row
+	end
+
+	background color: "white"
+
+	rect width: "2.5in", height: "3.5in", stroke_color: :black, stroke_width: 25
+	text str: data["name"],          y: "0.2in",          layout: "header"
+	text str: buffer["armor"],        y: "0.45in",           layout: "meta"
+	text str: buffer["resilience"],   y: "0.63in",          layout: "meta"
+	text str: buffer["weight"],       y: "0.81in",          layout: "meta"
+
+	text str: data["text"],        y: "1.5in",           layout: "paragraph"
+
+
+	text str: buffer["id"], layout: "bottom_right"
+
+	save_png prefix: "limb_"
 end

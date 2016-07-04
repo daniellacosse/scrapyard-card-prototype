@@ -4,7 +4,7 @@ require "deep_clone"
 require "csv"
 require "openssl"
 
-def open_gsheet(filepath)
+def open_gsheet(filepath, destination = "cache.csv")
 	# (1) open gdoc
 	gdoc = JSON.parse(File.read(filepath))
 
@@ -12,7 +12,7 @@ def open_gsheet(filepath)
 	buffer = open("https://docs.google.com/spreadsheets/d/#{gdoc['doc_id']}/export?format=csv", ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE).read
 
 	# (3) stuff into local csv
-	File.open("cache.csv", "w") { |file| file << buffer }
+	File.open(destination, "w") { |file| file << buffer }
 
 	# (4) return row length, for utility
 	CSV.parse(buffer).length - 1
@@ -20,7 +20,7 @@ end
 
 def if_truthy(val)
 	falsies = [
-		(!val), (val == 0), (val == ""), (val == "FALSE"), (val == "--"), (val == "0")
+		(!val), (val == 0), (val == ""), (val == "FALSE"), (val == "--"), (val == "???"), (val == "0")
 	]
 
 	falsies.any? ? nil : yield(val)
@@ -99,6 +99,10 @@ class Hash
 		self.each { |k, v| mapped_values[k] = yield(v) }
 
 		return mapped_values
+	end
+
+	def compact
+		delete_if { |k, v| k.nil? || v.nil? }
 	end
 end
 
