@@ -6,26 +6,29 @@ bundle install
 printf "Printing Modules..."
 echo && cd scrapper_module/
 ruby deck.rb
-# ruby analyzer.rb
+ruby analyzer.rb
 
-# (2)
-printf "Printing Component Blueprints..."
+# (2.1)
+printf "Importing Blueprints..."
 echo && cd ../blueprint/
-ruby deck.rb
+ruby import.rb # get scrap cache for blueprints
+
+# (2.2)
+printf "Importing Scraps..."
+echo && cd ../scrap/
+ruby import.rb # get scrap cache for scraps
 
 # (3.1)
-printf "Inferring Scrap card counts..."
-echo && cd ../scrap/
-ruby get_cache.rb # get scrap cache for blueprint analysis
-
+printf "Printing Blueprints..."
 cd ../blueprint/
+ruby deck.rb
 ruby analyzer.rb # spits out inferred scrap card counts
 
-#(3.2)
+# (3.2)
 printf "Printing Scraps..."
 echo && cd ../scrap/
 ruby deck.rb
-# ruby analyzer.rb
+ruby analyzer.rb
 
 # (4)
 printf "Printing Contestants..."
