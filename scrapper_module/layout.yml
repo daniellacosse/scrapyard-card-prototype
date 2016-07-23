@@ -2,13 +2,13 @@ fullwidth:
    width: 2.1in
    x: 0.2in
    align: center
-   font: Open Sans,Regular 72
+   font: Helvetica Neue,Regular 72
 header:
    extends: fullwidth
-   font: Open Sans,Bold 72
+   font: Helvetica Neue,Bold 72
 subheader:
    extends: fullwidth
-   font: Open Sans,Bold 48
+   font: Helvetica Neue,Bold 48
 green:
    extends: fullwidth
    color: green
@@ -23,15 +23,15 @@ gray:
    color: gray
 meta:
    extends: gray
-   font: Open Sans,Italic 72
+   font: Helvetica Neue,Italic 72
 paragraph:
    align: left
    height: 1.5in
    width: 2.1in
    x: 0.2in
-   font: Open Sans,Regular 48
+   font: Helvetica Neue,Regular 48
    wrap: true
 bottom_right:
    x: 2in
    y: 3.2in
-   font: Open Sans,Regular 48
+   font: Helvetica Neue,Regular 48

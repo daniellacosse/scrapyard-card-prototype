@@ -17,7 +17,7 @@ MIN_LAYER_VALUE_COEFF = 0.75
 MAX_LAYER_VALUE_COEFF = 2.5
 
 # TODO: not quite right, doesn't stay between min & max
-LAYER_COEFFS = [4, 3, 2, 1].map do |layer|
+LAYER_VALUE_COEFFS = [4, 3, 2, 1].map do |layer|
 	MIN_LAYER_VALUE_COEFF - (
 		MAX_LAYER_VALUE_COEFF / (
 			2 * (Math.cos(PI * layer / 4) - 1)
@@ -25,8 +25,8 @@ LAYER_COEFFS = [4, 3, 2, 1].map do |layer|
 	)
 end
 
-BLUEPRINT_OPTION_COEFF = 0.5
-BLUEPRINT_PERCENTILE_COEFF = 1
+BUYOUT_OPTION_COEFF = 0.5
+BUYOUT_PERCENTILE_COEFF = 1
 
 # (1) read from google spreadsheets
 open_gsheet "../mastersheets/master_blueprint_sheet.gsheet", "../blueprint/cache.csv"
@@ -165,10 +165,10 @@ scraps.each do |scrap|
 			__total_scrap_count += 1
 
 			# determine card layer
+			# TODO: (this won't work lol but good try)
 			layer = layer_distribution.select do |layer_percent|
-				# TODO: (this won't work lol but good try)
 				layer_percent > card_number.to_f / current_scrap_count
-			end.first
+			end.first.round
 
 			layer += 1 if layer != 3 and __layer_counts[layer + 1] <= __layer_counts[layer]
 
@@ -176,7 +176,7 @@ scraps.each do |scrap|
 
 			# determine card value
 			classes = (scrap["classes"] || "").split(", ")
-			value = (LAYER_COEFFS[layer] * (classes.count + 1) / current_scrap_count).ceil
+			value = (LAYER_VALUE_COEFFS[layer] * (classes.count + 1) / current_scrap_count).ceil
 
 			__scrap_and_class_values[scrap["name"]] << value
 			classes.each { |c| __scrap_and_class_values[c] << value }
@@ -197,7 +197,7 @@ end
 
 # (5) in prep for blueprints, get median cost of each option, then the
 # => median of those and multiply by
-# => (1 + BLUEPRINT_OPTION_COEFF ** option_count-1)
+# => (1 + BUYOUT_OPTION_COEFF ** option_count-1)
 median_ingredient_value = lambda do |ingredient_name|
 	# TODO: this (doesn't matter rn b/c everything costs like 1 anyway)
 	1
@@ -211,7 +211,7 @@ scaled_median_option_values = lambda do |string|
 		option_sum
 	end
 
-	options.median * (1 + BLUEPRINT_OPTION_COEFF ** (options.count - 1))
+	options.median * (1 + BUYOUT_OPTION_COEFF ** (options.count - 1))
 end
 
 blueprint_median_option_values = {}.tap do |_bmov|
@@ -227,7 +227,7 @@ blueprint_median_option_values = {}.tap do |_bmov|
 end
 
 # (6) remap all option costs by the percentile of their blueprint's
-# => overall cost * BLUEPRINT_PERCENTILE_COEFF + 1/2
+# => overall cost * BUYOUT_PERCENTILE_COEFF + 1/2
 blueprint_option_values_by_percentile = {}.tap do |_bovp|
 	requirement_sums = blueprint_median_option_values.values.map(&:sum)
 	requirement_mean = requirement_sums.mean
@@ -242,7 +242,7 @@ blueprint_option_values_by_percentile = {}.tap do |_bovp|
 		)
 
 		_bovp[blueprint["name"]] = option_values.map do |option_value|
-			(option_value * (percentile * BLUEPRINT_PERCENTILE_COEFF + 0.5)).round
+			(option_value * (percentile * BUYOUT_PERCENTILE_COEFF + 0.5)).round
 		end
 	end
 end
@@ -266,6 +266,8 @@ end
 
 # (8) write final cards to CSV for printing w/ squib!
 CSV.open("../scrap/cards.csv", "wb") do |sc_csv|
+	sc_csv << scrap_properties
+
 	__total_scrap_count.times do |row_number|
 		sc_csv << [].tap do |csv_row|
 			scrap_properties.each do |property|
@@ -276,6 +278,8 @@ CSV.open("../scrap/cards.csv", "wb") do |sc_csv|
 end
 
 CSV.open("../blueprint/cards.csv", "wb") do |bp_csv|
+	bp_csv << blueprint_properties
+
 	blueprints.count.times do |row_number|
 		bp_csv << [].tap do |csv_row|
 			blueprint_properties.each do |property|

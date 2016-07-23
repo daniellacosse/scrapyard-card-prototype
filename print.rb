@@ -1,4 +1,4 @@
-require "./util"
+require "./scripts/util"
 require "ruby-progressbar"
 require "prawn"
 include Prawn

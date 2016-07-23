@@ -1,6 +1,6 @@
 require "csv"
 require "colorize"
-require "../util"
+require "../scripts/util"
 
 OUTLIER_TOLERANCE = 2.5
 
