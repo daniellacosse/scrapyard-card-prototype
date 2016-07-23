@@ -3,6 +3,8 @@
 bundle install
 
 # (1) procedurally generate addtional stats
+# => and write the final cards to CSVs for printing
+printf "Setting up..."
 ruby scripts/pre_processing.rb
 
 # (2)
@@ -27,6 +29,6 @@ echo && cd ../contestant/
 ruby deck.rb
 
 # (6)
-printf "Compiling PDF..."
+printf "Compiling final PDF..."
 echo && cd ..
 ruby scripts/assemble_pdf.rb

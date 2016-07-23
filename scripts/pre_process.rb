@@ -50,7 +50,7 @@ scrap_count_from_blueprints = {}.tap do |_scfb|
 		scrap_name = scrap_name.gsub(/\s+\(\d\)$/, "")
 
 		if !!_scfb[scrap_name]
-			_scfb[scrap_name] += count || 1
+			_scfb[scrap_name] += count || 1.0
 		else
 			_scfb[scrap_name] = count || 1.0
 		end
@@ -207,7 +207,7 @@ blueprint_option_values_by_percentile = {}.tap do |_bovp|
 	end
 end
 
-# (7)
+# (7) build out final set of blueprint cards!
 blueprint_cards = {}.tap do |_bc|
   blueprint_properties.each { |property| _bc[property] = [] }
 
@@ -224,7 +224,7 @@ blueprint_cards = {}.tap do |_bc|
 	end
 end
 
-# (8) write cards to CSV!
+# (8) write final cards to CSV for printing w/ squib!
 CSV.open("scraps/cards.csv", "wb") do |sc_csv|
 	__total_scrap_count.times do |row_number|
 		sc_csv << [].tap do |csv_row|

@@ -77,8 +77,18 @@ class Array
 		self.map &:inches
 	end
 
-	def hash_rows(row_keys)
+	def hash_rows!(row_keys)
+		self.map do |row|
+			{}.tap do |hashed_row|
+				row_keys.each_with_index do |key, index|
+					hashed_row[key] = row[index]
+				end
+			end
+		end
+	end
 
+	def hash_rows(row_keys)
+		self.__deep_clone__.hash_rows!(row_keys)
 	end
 end
 
