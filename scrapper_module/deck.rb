@@ -1,5 +1,5 @@
+require "../scripts/util"
 require "squib"
-require "../util"
 include Squib
 
 Y_POS = ["0.9in", "1.15in", "1.4in"]

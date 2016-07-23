@@ -1,6 +1,6 @@
-require "prawn"
-require "./util"
+require "util"
 require "ruby-progressbar"
+require "prawn"
 include Prawn
 
 BPRINT_ROW_SIZE, BPRINT_COL_SIZE = 3, 3

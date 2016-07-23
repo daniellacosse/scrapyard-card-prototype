@@ -1,13 +1,15 @@
 # scrapyard: prototype cards
-a project for generating prototype cards for scrapyard (status: esoteric)
+a project for generating prototype cards for scrapyard (status: semi-esoteric)
 
-run `bash print_all.sh` to do it
+run `bash print.sh` to do it, it's the key to all this
+
+as a corollary, look at `print.sh` to see what happens and in what order
 
 commercial license, sorry gents nothing to see here
 
 ---------
 
-Notes
+(OLD) Notes - ignore these
 =====
 
 **Power/Cost Ratio (PCR)**

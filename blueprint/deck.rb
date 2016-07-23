@@ -1,5 +1,5 @@
+require "../scripts/util"
 require "squib"
-require "../util"
 include Squib
 
 DECK_CONFIG = {

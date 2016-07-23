@@ -34,6 +34,28 @@ def dbl_digits(int)
 	(int <= 9) ? "0#{int}" : int
 end
 
+# http://stackoverflow.com/questions/31875909/z-score-to-probability-and-vice-verse-in-ruby
+def get_percent_from_zscore(z)
+  return 0 if z < -6.5
+  return 1 if z > 6.5
+
+  factk = 1
+  sum = 0
+  term = 1
+  k = 0
+
+  loopStop = Math.exp(-23)
+  while term.abs > loopStop do
+      term = 0.3989422804 * ((-1)**k) * (z**k) / (2*k+1) / (2**k) * (z**(k+1)) /factk
+      sum += term
+      k += 1
+      factk *= k
+  end
+
+  sum += 0.5
+  1-sum
+end
+
 class Float
 	def inches
 		self * 72
@@ -53,6 +75,10 @@ class Array
 
 	def inches
 		self.map &:inches
+	end
+
+	def hash_rows(row_keys)
+
 	end
 end
 
