@@ -7,8 +7,9 @@ scrapper_module/limb_cache.csv
 scrapper_module/weapon_cache.csv
 
 blueprint/cache.csv
-blueprint/results.csv
+blueprint/cards.csv
 scrap/cache.csv
+scrap/cards.csv
 contestant/cache.csv
 
 scrapper_module/_output

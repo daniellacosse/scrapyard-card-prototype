@@ -78,12 +78,14 @@ class Array
 	end
 
 	def hash_rows!(row_keys)
-		self.map do |row|
-			{}.tap do |hashed_row|
-				row_keys.each_with_index do |key, index|
-					hashed_row[key] = row[index]
-				end
+		self.map! do |row|
+			hashed_row = {}
+
+			row_keys.each_with_index do |key, index|
+				hashed_row[key] = row[index]
 			end
+
+			hashed_row
 		end
 	end
 
@@ -150,6 +152,12 @@ module Enumerable
    def mean
    	self.sum / self.length.to_f
    end
+
+	 def median
+		 sorted = self.sort
+		 len = sorted.length
+	   (sorted[(len - 1) / 2] + sorted[len / 2]) / 2.0
+	 end
 
    def sample_variance
 	   m = self.mean
