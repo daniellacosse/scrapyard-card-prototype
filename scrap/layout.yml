@@ -4,9 +4,6 @@ fullwidth:
    align: center
    color: black
    font: Helvetica Neue,Regular 72
-paragraph:
-   extends: fullwidth
-   height: 1.5in
 title:
    extends: fullwidth
    font: Helvetica Neue,Bold 72
