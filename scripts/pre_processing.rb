@@ -13,20 +13,18 @@ SCRAP_CLASSES = [
 	"ceramic"
 ]
 
-MIN_LAYER_VALUE_COEFF = 0.75
-MAX_LAYER_VALUE_COEFF = 2.5
+MIN_LAYER_VALUE_COEFF = 1
+MAX_LAYER_VALUE_COEFF = 10
+LAYER_VALUE_COEFF_RANGE = MAX_LAYER_VALUE_COEFF - MIN_LAYER_VALUE_COEFF
 
-# TODO: not quite right, doesn't stay between min & max
-LAYER_VALUE_COEFFS = [4, 3, 2, 1].map do |layer|
+LAYER_VALUE_COEFFS = [0, 1, 2, 3].map do |layer|
 	MIN_LAYER_VALUE_COEFF - (
-		MAX_LAYER_VALUE_COEFF / (
-			2 * (Math.cos(PI * layer / 4) - 1)
-		)
+		(LAYER_VALUE_COEFF_RANGE / 2) * (Math.cos(PI * layer / 4) - 1)
 	)
 end
 
-BUYOUT_OPTION_COEFF = 0.5
-BUYOUT_PERCENTILE_COEFF = 1
+BUYOUT_OPTIONALITY_COEFF = 0.5
+BUYOUT_PERCENTILE_COEFF = 2
 
 # (1) read from google spreadsheets
 open_gsheet "../mastersheets/master_blueprint_sheet.gsheet", "../blueprint/cache.csv"
@@ -50,14 +48,14 @@ scrap_list_from_blueprints = blueprints.map do |row|
     .flatten
 end.flatten
 
-# TODO: handle no-classes edge case well
+# TODO: handle no-classes edge case better
 scrap_count_from_blueprints = {}.tap do |_scfb|
 	scrap_list_from_blueprints.each do |scrap_name|
 		count = scrap_name[/\s+\((\d)\)$/, 1]
 		count ||= 1
 		count = count.to_f
 		scrap_name = scrap_name.gsub(/\s+\(\d\)$/, "")
-		scrap_classes = (scraps.find { |scrap| scrap["name"] == scrap_name }["classes"] || "").split(", ")
+		scrap_classes = scraps.find { |scrap| scrap["name"] == scrap_name }["classes"].comma_split
 
 		scrap_classes.each do |class_name|
 			if !!_scfb["[#{class_name}]"]
@@ -81,7 +79,7 @@ scrap_importance_from_blueprints = {}.tap do |_sifb|
 
     next unless !!scrap_count
 
-		scrap_classes = (scrap["classes"] || "").split(", ")
+		scrap_classes = scrap["classes"].comma_split
 		class_counts = scrap_classes.map do |class_name|
 			scrap_count_from_blueprints["[#{class_name}]"]
 		end.compact
@@ -140,7 +138,7 @@ scrap_cards = {}.tap do |_sc|
 end
 
 __layer_counts = Hash.new(0)
-__scrap_and_class_values = Hash.new([])
+__scrap_and_class_values = {}
 __total_scrap_count = 0
 scraps.each do |scrap|
 	current_scrap_count = weighted_scrap_counts[scrap["name"]]
@@ -165,21 +163,32 @@ scraps.each do |scrap|
 			__total_scrap_count += 1
 
 			# determine card layer
-			# TODO: (this won't work lol but good try)
-			layer = layer_distribution.select do |layer_percent|
-				layer_percent > card_number.to_f / current_scrap_count
-			end.first.round
+			layer = layer_distribution.find_index do |layer_percent|
+				(card_number.to_f / current_scrap_count) <= layer_percent
+			end
 
 			layer += 1 if layer != 3 and __layer_counts[layer + 1] <= __layer_counts[layer]
 
 			__layer_counts[layer] += 1
 
 			# determine card value
-			classes = (scrap["classes"] || "").split(", ")
+			classes = scrap["classes"].comma_split
 			value = (LAYER_VALUE_COEFFS[layer] * (classes.count + 1) / current_scrap_count).ceil
 
-			__scrap_and_class_values[scrap["name"]] << value
-			classes.each { |c| __scrap_and_class_values[c] << value }
+			# (save card value for later)
+			if !!__scrap_and_class_values[scrap["name"]]
+				__scrap_and_class_values[scrap["name"]] << value
+			else
+				__scrap_and_class_values[scrap["name"]] = [ value ]
+			end
+
+			classes.each do |class_name|
+				if !!__scrap_and_class_values["[#{class_name}]"]
+					__scrap_and_class_values["[#{class_name}]"] << value
+				else
+					__scrap_and_class_values["[#{class_name}]"] = [ value ]
+				end
+			end
 
 			# push in the new card, prop-by-prop
 			scrap_properties.each do |key|
@@ -197,21 +206,18 @@ end
 
 # (5) in prep for blueprints, get median cost of each option, then the
 # => median of those and multiply by
-# => (1 + BUYOUT_OPTION_COEFF ** option_count-1)
-median_ingredient_value = lambda do |ingredient_name|
-	# TODO: this (doesn't matter rn b/c everything costs like 1 anyway)
-	1
-end
-
+# => (1 + BUYOUT_OPTIONALITY_COEFF ** option_count-1)
 scaled_median_option_values = lambda do |string|
-	options = string.split("\n").map { |option| option.split ", " }
+	options = string.split("\n").map { |option| option.comma_split }
 	options.map! do |option|
-		option_sum = option.map(&median_ingredient_value).inject(:+)
+		option_sum = option.map do |ingredient_name|
+			__scrap_and_class_values[ingredient_name].median
+		end
 
-		option_sum
+		option_sum.inject(:+)
 	end
 
-	options.median * (1 + BUYOUT_OPTION_COEFF ** (options.count - 1))
+	options.median * (1 + BUYOUT_OPTIONALITY_COEFF ** (options.count - 1))
 end
 
 blueprint_median_option_values = {}.tap do |_bmov|
@@ -263,6 +269,24 @@ blueprint_cards = {}.tap do |_bc|
 		end
 	end
 end
+
+# (7.1) log results TODO: outliers [add to util]
+puts "Total Scraps: #{__total_scrap_count}".light_red.underline
+puts "Scrap Count Error%: #{(1 - (__total_scrap_count.to_f / SCRAP_DECK_SIZE)).round(2)}".red
+puts "Scraps per layer:".light_green.underline
+__layer_counts.each do |layer, count|
+	puts "=> Layer #{layer + 1}: #{count} (#{(count.to_f/SCRAP_DECK_SIZE*100).round(2)}%)".green
+end
+puts "Scrap value by class:".light_yellow.underline
+SCRAP_CLASSES.each do |class_name|
+	puts "=> #{class_name}".light_yellow
+	puts "=> => mean value: \t#{__scrap_and_class_values["[#{class_name}]"].mean.round(2)}".yellow
+	puts "=> => std dev: \t\t#{__scrap_and_class_values["[#{class_name}]"].standard_deviation.round(2)}".yellow
+end
+puts "---".light_blue
+puts "Average Blueprint cost: \t\t#{blueprint_option_values_by_percentile.values.map {|o| o.inject(:+)}.mean.round(2)}".light_blue
+puts "Average Blueprint standard_deviation: \t#{blueprint_option_values_by_percentile.values.map {|o| o.inject(:+)}.standard_deviation.round(2)}".blue
+
 
 # (8) write final cards to CSV for printing w/ squib!
 CSV.open("../scrap/cards.csv", "wb") do |sc_csv|

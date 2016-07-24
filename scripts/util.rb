@@ -144,6 +144,18 @@ class Hash
 	end
 end
 
+class String
+	def comma_split
+		self.split /,\s*/
+	end
+end
+
+class NilClass
+	def comma_split
+		[]
+	end
+end
+
 module Enumerable
    def sum
    	self.inject(0) { |accum, i| accum + i.to_i }

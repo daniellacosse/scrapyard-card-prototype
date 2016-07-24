@@ -38,11 +38,11 @@ puts "Printing backs...\n"
 Deck.new(DECK_CONFIG) do
 	data = csv file: "cards.csv"
 	buffer = data.row_map do |row, new_row|
-		classes = SCRAP_CLASSES - (row["classes"] || "").split(", ")
+		classes = SCRAP_CLASSES - row["classes"].comma_split
 		classes.shuffle!
 
 		class_hints = [
-			(row["classes"] || "").split(", ").shuffle.shift,
+			row["classes"].comma_split.shuffle.shift,
 			classes.first
 		].shuffle!
 
