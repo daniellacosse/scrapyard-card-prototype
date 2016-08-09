@@ -180,4 +180,12 @@ module Enumerable
    def standard_deviation
 	   Math.sqrt self.sample_variance
    end
+
+	 def outliers(tolerance = 2.5)
+		 m = self.mean
+		 std = self.standard_deviation
+		 lower_bound = m - (tolerance * std)
+		 upper_bound = m + (tolerance * sorted)
+		 self.filter { |el| el > upper_bound || el < lower_bound  }
+	 end
 end

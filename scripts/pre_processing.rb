@@ -31,7 +31,10 @@ open_gsheet "../mastersheets/master_blueprint_sheet.gsheet", "../blueprint/cache
 open_gsheet "../mastersheets/master_scrap_sheet.gsheet", "../scrap/cache.csv"
 
 blueprints = CSV.read "../blueprint/cache.csv"
-blueprint_properties = blueprints.shift + ["rq1_buyout", "rq2_buyout", "rq3_buyout", "rq4_buyout", "rq5_buyout"]
+blueprint_properties = blueprints.shift
+blueprint_properties_with_buyouts = blueprint_properties + [
+	"rq1_buyout", "rq2_buyout", "rq3_buyout", "rq4_buyout", "rq5_buyout"
+]
 blueprints.hash_rows! blueprint_properties
 
 scraps = CSV.read "../scrap/cache.csv"
@@ -55,13 +58,21 @@ scrap_count_from_blueprints = {}.tap do |_scfb|
 		count ||= 1
 		count = count.to_f
 		scrap_name = scrap_name.gsub(/\s+\(\d\)$/, "")
-		scrap_classes = scraps.find { |scrap| scrap["name"] == scrap_name }["classes"].comma_split
+		found_scrap = scraps.find { |scrap| scrap["name"] == scrap_name }
 
-		scrap_classes.each do |class_name|
-			if !!_scfb["[#{class_name}]"]
-				_scfb["[#{class_name}]"] += count || 1.0
-			else
-				_scfb["[#{class_name}]"] = count || 1.0
+		unless found_scrap || SCRAP_CLASSES.include?(scrap_name[/\[(.+)\]/, 1])
+			throw "Scrap #{scrap_name} not found. Try regenerating the scrap mastersheet."
+		end
+
+		if found_scrap
+			scrap_classes = found_scrap["classes"].comma_split
+
+			scrap_classes.each do |class_name|
+				if !!_scfb["[#{class_name}]"]
+					_scfb["[#{class_name}]"] += count || 1.0
+				else
+					_scfb["[#{class_name}]"] = count || 1.0
+				end
 			end
 		end
 
@@ -120,14 +131,17 @@ skew_min, skew_max = scrap_count_skews.values.min.round, scrap_count_skews.value
 weighted_scrap_count_skews = Hash[
 	scrap_count_skews.map do |scrap_name, skew|
 		raw_weight = -1 + 2 * (skew - skew_min) / (skew_max - skew_min)
+		result = nil
 
 		if raw_weight < -1
-			return [scrap_name, -1]
+			result = [scrap_name, -1]
 		elsif raw_weight > 1
-			return [scrap_name, 1]
+			result = [scrap_name, 1]
+		else
+			result = [scrap_name, raw_weight]
 		end
 
-		[scrap_name, raw_weight]
+		result
 	end
 ]
 
@@ -210,8 +224,12 @@ end
 scaled_median_option_values = lambda do |string|
 	options = string.split("\n").map { |option| option.comma_split }
 	options.map! do |option|
-		option_sum = option.map do |ingredient_name|
-			__scrap_and_class_values[ingredient_name].median
+		option_sum = option.map do |ingredient|
+			ingredient_name = ingredient[/^[a-zA-Z \[\]\-]+/].strip
+			ingredient_count = ingredient[/\s+\((\d)\)$/, 1].to_i
+			ingredient_count = 1 if ingredient_count == 0
+
+			__scrap_and_class_values[ingredient_name].median * ingredient_count
 		end
 
 		option_sum.inject(:+)
@@ -255,31 +273,31 @@ end
 
 # (7) build out final set of blueprint cards!
 blueprint_cards = {}.tap do |_bc|
-  blueprint_properties.each { |property| _bc[property] = [] }
+  blueprint_properties_with_buyouts.each { |property| _bc[property] = [] }
 
 	blueprints.each do |blueprint|
 		option_values = blueprint_option_values_by_percentile[blueprint["name"]]
 
 		blueprint_properties.each do |property|
 			_bc[property] << blueprint[property]
+		end
 
-			option_values.each_with_index do |option, index|
-				_bc["rq#{index + 1}_buyout"] << option
-			end
+		5.times do |index|
+			_bc["rq#{index + 1}_buyout"] << option_values[index]
 		end
 	end
 end
 
 # (7.1) log results TODO: outliers [add to util]
 puts "Total Scraps: #{__total_scrap_count}".light_red.underline
-puts "Scrap Count Error%: #{(1 - (__total_scrap_count.to_f / SCRAP_DECK_SIZE)).round(2)}".red
+puts "Scrap Count Error: #{(1 - (__total_scrap_count.to_f / SCRAP_DECK_SIZE)).round(2)}".red
 puts "Scraps per layer:".light_green.underline
 __layer_counts.each do |layer, count|
 	puts "=> Layer #{layer + 1}: #{count} (#{(count.to_f/SCRAP_DECK_SIZE*100).round(2)}%)".green
 end
 puts "Scrap value by class:".light_yellow.underline
 SCRAP_CLASSES.each do |class_name|
-	puts "=> #{class_name}".light_yellow
+	puts "=> #{class_name}\t #{__scrap_and_class_values["[#{class_name}]"].count}".light_yellow
 	puts "=> => mean value: \t#{__scrap_and_class_values["[#{class_name}]"].mean.round(2)}".yellow
 	puts "=> => std dev: \t\t#{__scrap_and_class_values["[#{class_name}]"].standard_deviation.round(2)}".yellow
 end
@@ -302,11 +320,11 @@ CSV.open("../scrap/cards.csv", "wb") do |sc_csv|
 end
 
 CSV.open("../blueprint/cards.csv", "wb") do |bp_csv|
-	bp_csv << blueprint_properties
+	bp_csv << blueprint_properties_with_buyouts
 
 	blueprints.count.times do |row_number|
 		bp_csv << [].tap do |csv_row|
-			blueprint_properties.each do |property|
+			blueprint_properties_with_buyouts.each do |property|
 				csv_row << blueprint_cards[property][row_number]
 			end
 		end
