@@ -17,10 +17,10 @@ Deck.new(DECK_CONFIG) do
 		new_row = row
 
 		new_row["meta"] = "(build mode)"
-		new_row["meta2"] = "engineering skill: #{row['eng_skill']}"
-		new_row["meta3"] = "body: #{row['body']}, mind: #{row['mind']}"
+		new_row["meta2"] = "engineering lvl: tier #{row['eng_tier']}"
+		new_row["meta3"] = "health: #{row['health']}"
 
-		new_row["ability"] = row["build_passive"] || row["build_active"]
+		new_row["ability"] = row["build_skill"]
 
 		new_row
 	end
@@ -46,10 +46,13 @@ Deck.new(DECK_CONFIG) do
 		new_row = row
 
 		new_row["meta"] = "(combat mode)"
-		new_row["meta2"] = "piloting skill: #{row['pilot_skill']}"
-		new_row["meta3"] = "power: #{row['chassis_power']}"
+		new_row["meta2"] = "pilot lvl: tier #{row['pilot_tier']}, horsepower: #{row['chassis_power']}"
+		new_row["meta3"] = "health: #{row['health']}"
 
-		new_row["ability"] = row["combat_passive"] || row["combat_active"]
+		new_row["ability_1"] = row["pressure_1"]
+		new_row["ability_1_number"] = "(-1)"
+		new_row["ability_3"] = row["pressure_3"]
+		new_row["ability_3_number"] = "(-3)"
 
 		new_row
 	end
@@ -63,7 +66,15 @@ Deck.new(DECK_CONFIG) do
 	text str: buffer["meta2"], y: "0.65in", layout: "list"
 	text str: buffer["meta3"], y: "0.8in", layout: "list"
 
-	text str: buffer["ability"], y: "1in", layout: "list"
+	text str: buffer["ability_1"], y: "1in", layout: "list"
+
+	text str: buffer["ability_1_number"], y: "1in", layout: "lost_num"
+	ability_1 = text str: buffer["ability_1"], y: "1in", layout: "list"
+
+	ext = ability_1.map.with_index { |text, i| "#{text[:height]/600.0 + 1.25}in" }
+
+	text str: buffer["ability_3_number"], y: ext, layout: "lost_num"
+	ability_1 = text str: buffer["ability_3"], y: ext, layout: "list"
 
 	save_png prefix: "contestant_combat_"
 end

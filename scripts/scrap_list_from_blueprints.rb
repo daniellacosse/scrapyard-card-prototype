@@ -17,6 +17,8 @@ end.flatten
 
 scrap_count_from_blueprints = {}.tap do |_scfb|
 	scrap_list_from_blueprints.each do |scrap_name|
+		next if scrap_name =~ /^\[/ # filter class names
+
 		count = scrap_name[/\s+\((\d)\)$/, 1]
 		count ||= 1
 		count = count.to_f
@@ -30,13 +32,25 @@ scrap_count_from_blueprints = {}.tap do |_scfb|
 	end
 end
 
-one_offs = scrap_count_from_blueprints.select { |k, v| v == 1 }
-# most_common = scrap_count_from_blueprints.select { |k, v| .mean }
+scraps_grouped_by_count = Hash[
+	scrap_count_from_blueprints
+		.group_by {|_, v| v }
+		.map {|k, v| [k, v.map(&:first).sort] }
+		.sort
+]
 
-puts "All scraps w/ counts:".light_red
-scrap_count_from_blueprints.sort.each { |k, v| puts "=> #{k}: #{v.to_i}" }
+puts "---".light_black
+
 puts "Total scrap #: #{scrap_count_from_blueprints.count}".light_black
 puts "Avg recidivism: #{(scrap_list_from_blueprints.length.to_f / scrap_count_from_blueprints.length).round(2)}".light_black
-puts "All one-offs:".light_red
-puts one_offs.keys.sort.join ", "
-puts "% one offs: #{one_offs.count.to_f / scrap_count_from_blueprints.count.to_f}".light_black
+puts "% one offs: #{scraps_grouped_by_count[1.0].count.to_f / scrap_count_from_blueprints.count.to_f}".light_black
+
+puts "---".light_black
+
+puts "All scraps w/ counts:".light_red
+
+scraps_grouped_by_count.each do |count, scraps|
+	puts "=> #{count.to_i} Count".yellow
+
+	scraps.each { |scrap| puts "=> => #{scrap}".light_black}
+end

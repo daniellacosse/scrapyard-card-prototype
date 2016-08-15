@@ -1,25 +1,36 @@
 require "./scripts/util"
 require "ruby-progressbar"
+require "csv"
 require "prawn"
 include Prawn
 
-BPRINT_ROW_SIZE, BPRINT_COL_SIZE = 3, 3
-BPRINT_FRONTS = "blueprint/_output/bprint_"
-BPRINT_BACKS = "scrapper_module/_output/module_"
-BPRINT_COUNT = Dir["scrapper_module/_output/*"].length
-
-SCRAP_ROW_SIZE, SCRAP_COL_SIZE = 4, 5
-SCRAP_FRONTS = "scrap/_output/scrap_"
-SCRAP_BACKS = "scrap/_output/scrap_back_"
-SCRAP_COUNT = Dir["scrap/_output/*"].length
-
-PILOT_ROW_SIZE, PILOT_COL_SIZE = 3, 2
-PILOT_FRONTS = "contestant/_output/contestant_build_"
-PILOT_BACKS = "contestant/_output/contestant_combat_"
-PILOT_COUNT = Dir["contestant/_output/*"].length
-
 PRINTER_ERROR_Y = 0.0
 PRINTER_ERROR_X = 0.0
+
+BPRINT_COUNT = Dir["blueprint/_output/*"].length
+BPRINT_ROW_SIZE, BPRINT_COL_SIZE = 3, 3
+
+BPRINT_CARDS = CSV.read "./blueprint/cards.csv"
+BPRINT_CARDS.shift
+
+BPRINT_FRONTS = "blueprint/_output/bprint_"
+BPRINT_BACKS = {
+	"LMB" => "scrapper_module/_output/lmb_",
+	"WPN" => "scrapper_module/_output/wpn_",
+	"ADD" => "scrapper_module/_output/add_"
+}
+
+SCRAP_COUNT = Dir["scrap/_output/*"].length
+SCRAP_ROW_SIZE, SCRAP_COL_SIZE = 4, 5
+
+SCRAP_FRONTS = "scrap/_output/scrap_"
+SCRAP_BACKS = "scrap/_output/scrap_back_"
+
+PILOT_COUNT = Dir["contestant/_output/*"].length
+PILOT_ROW_SIZE, PILOT_COL_SIZE = 3, 2
+
+PILOT_FRONTS = "contestant/_output/contestant_build_"
+PILOT_BACKS = "contestant/_output/contestant_combat_"
 
 pdf_progress = ProgressBar.create(
 	title: "Placing Cards:", total: nil, format: "%t <%B> %a"
@@ -62,14 +73,18 @@ Document.generate "sheets/blueprint_sheets.pdf", margin: 0 do |pdf|
 
 		BPRINT_ROW_SIZE.times do |i|
 			BPRINT_COL_SIZE.times do |j|
-				current_card = dbl_digits(
-					 sets_printed_count + (i * BPRINT_COL_SIZE + j)
-				)
+				current_card = sets_printed_count + (i * BPRINT_COL_SIZE + j)
 
 				next if current_card.to_i >= BPRINT_COUNT
 
+				current_card_index = current_card - 1
+
+				# lookup current card type from blueprint cards.csv
+				current_type_id = dbl_digits(BPRINT_CARDS[current_card_index][0].to_i - 1)
+				current_type = BPRINT_CARDS[current_card_index][1]
+
 				pdf.image(
-					"#{BPRINT_BACKS}#{current_card}.png",
+					"#{BPRINT_BACKS[current_type]}#{current_type_id}.png",
 					{
 						width: 2.5.inches,
 						at: [

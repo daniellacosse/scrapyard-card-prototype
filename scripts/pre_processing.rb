@@ -292,7 +292,7 @@ end
 puts "Total Scraps: #{__total_scrap_count}".light_red.underline
 puts "Scrap Count Error: #{(1 - (__total_scrap_count.to_f / SCRAP_DECK_SIZE)).round(2)}".red
 puts "Scraps per layer:".light_green.underline
-__layer_counts.each do |layer, count|
+__layer_counts.sort.each do |layer, count|
 	puts "=> Layer #{layer + 1}: #{count} (#{(count.to_f/SCRAP_DECK_SIZE*100).round(2)}%)".green
 end
 puts "Scrap value by class:".light_yellow.underline

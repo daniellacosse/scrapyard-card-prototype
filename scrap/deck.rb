@@ -26,16 +26,16 @@ Deck.new(DECK_CONFIG) do
 	buffer = data.row_map do |row, new_row|
 		new_row["id"] = "#{row["id"]}-#{row["value"]}"
 
+		new_row["value"] = "$#{row["value"]}"
+
 		new_row
 	end
-
-	puts buffer["id"]
 
 	background color: "white"
 	rect width: "2in", height: "2in", stroke_color: :black, stroke_width: 20
 	text str: data["name"],               layout: "title"
 	text str: data["classes"], y: Y_POS[0],         layout: "fullwidth"
-	text str: data["value"], y:Y_POS[1], layout: "fullwidth"
+	text str: buffer["value"], y:Y_POS[1], layout: "fullwidth"
 	text str: buffer["id"], layout: "footer"
 
 	save_png prefix: "scrap_"

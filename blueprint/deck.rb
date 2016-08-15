@@ -17,25 +17,27 @@ Deck.new(DECK_CONFIG) do
 		new_row["header"] = "Blueprint, Rank #{row['rank']}"
 		new_row["meta"] = "#{row['name']}, #{row['type']}"
 		if_truthy(row["rq1"]) do |req1|
-			new_row["rq1_buyout"] = row["rq1_buyout"]
+			new_row["rq1_buyout"] = "$#{row["rq1_buyout"]}"
 			new_row["rq1"] = req1
 		end
 		if_truthy(row["rq2"]) do |req2|
-			new_row["rq2_buyout"] = row["rq2_buyout"]
+			new_row["rq2_buyout"] = "$#{row["rq2_buyout"]}"
 			new_row["rq2"] = req2
 		end
 		if_truthy(row["rq3"]) do |req3|
-			new_row["rq3_buyout"] = row["rq3_buyout"]
+			new_row["rq3_buyout"] = "$#{row["rq3_buyout"]}"
 			new_row["rq3"] = req3
 		end
 		if_truthy(row["rq4"]) do |req4|
-			new_row["rq4_buyout"] = row["rq4_buyout"]
+			new_row["rq4_buyout"] = "$#{row["rq4_buyout"]}"
 			new_row["rq4"] = req4
 		end
 		if_truthy(row["rq5"]) do |req5|
-			new_row["rq5_buyout"] = row["rq5_buyout"]
+			new_row["rq5_buyout"] = "$#{row["rq5_buyout"]}"
 			new_row["rq5"] = req5
 		end
+
+		new_row["id"] = "#{row['type']}-#{row['id']}"
 
 		new_row
 	end
@@ -69,7 +71,7 @@ Deck.new(DECK_CONFIG) do
 	text str: buffer["rq5_buyout"], y: ext, layout: "number"
 	text str: buffer["rq5"], y: ext, layout: "list"
 
-	text str: data["id"], layout: "bottom_right"
+	text str: buffer["id"], layout: "bottom_right"
 
 	save_png prefix: "bprint_"
 end

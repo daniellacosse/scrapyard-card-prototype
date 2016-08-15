@@ -6,18 +6,20 @@ fullwidth:
 header:
    extends: fullwidth
    font: Helvetica Neue,Bold 72
-number:
+lost_num:
    align: left
    height: 0.75in
    width: 0.5in
    x: 0.2in
    font: Helvetica Neue,Regular 72
    wrap: true
+   color: red
 list:
-   extends: number
-   width: 2in
-   x: 0.25in
+   extends: lost_num
+   width: 1.5in
+   x: 0.75in
    font: Helvetica Neue,Regular 48
+   color: black
 bold:
   extends: list
   font: Helvetica Neue,Bold 48
