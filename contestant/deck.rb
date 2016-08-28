@@ -16,11 +16,17 @@ Deck.new(DECK_CONFIG) do
 	buffer = data.row_map do |row, new_row|
 		new_row = row
 
-		new_row["meta"] = "(build mode)"
-		new_row["meta2"] = "engineering lvl: tier #{row['eng_tier']}"
+		new_row["name"] = "\"#{row['name']}\""
+
+		new_row["meta"] = "[BUILD MODE]"
+		new_row["meta2"] = "engineering: lv. #{row['eng_tier']}"
 		new_row["meta3"] = "health: #{row['health']}"
 
 		new_row["ability"] = row["build_skill"]
+
+		new_row["flavor"] = "#{row['_demo']}, #{row['_sex']}"
+		new_row["flavor2"] = "Origin: #{row['_origin']}"
+		new_row["flavor3"] = "#{row['_weight']}, #{row['_height']}"
 
 		new_row
 	end
@@ -31,10 +37,17 @@ Deck.new(DECK_CONFIG) do
 	text str: buffer["name"], y: "0.2in", layout: "header"
 
 	text str: buffer["meta"], y: "0.5in", layout: "bold"
-	text str: buffer["meta2"], y: "0.65in", layout: "list"
-	text str: buffer["meta3"], y: "0.8in", layout: "list"
+	text str: buffer["meta2"], y: "0.65in", layout: "fullwidth_list_center"
+	text str: buffer["meta3"], y: "0.82in", layout: "fullwidth_list_center"
 
-	text str: buffer["ability"], y: "1in", layout: "list"
+	text str: buffer["ability"], y: "1in", layout: "fullwidth_list"
+
+	text str: buffer["flavor"], y: "1.75in", layout: "fullwidth_list_gray"
+	text str: buffer["flavor2"], y: "1.9in", layout: "fullwidth_list_gray"
+	text str: buffer["flavor3"], y: "2.05in", layout: "fullwidth_list_gray"
+
+	text str: buffer["_summary"], y: "2.25in", layout: "fullwidth_list_gray"
+
 
 	save_png prefix: "contestant_build_"
 end
@@ -45,9 +58,12 @@ Deck.new(DECK_CONFIG) do
 	buffer = data.row_map do |row, new_row|
 		new_row = row
 
-		new_row["meta"] = "(combat mode)"
-		new_row["meta2"] = "pilot lvl: tier #{row['pilot_tier']}, horsepower: #{row['chassis_power']}"
-		new_row["meta3"] = "health: #{row['health']}"
+		new_row["name"] = "\"#{row['name']}\""
+
+		new_row["meta"] = "[COMBAT MODE]"
+		new_row["meta2"] = "pilot: lv. #{row['pilot_tier']}"
+		new_row["meta3"] = "horsepower: #{row['chassis_power']}"
+		new_row["meta4"] = "health: #{row['health']}"
 
 		new_row["ability_1"] = row["pressure_1"]
 		new_row["ability_1_number"] = "(-1)"
@@ -63,15 +79,17 @@ Deck.new(DECK_CONFIG) do
 	text str: buffer["name"], y: "0.2in", layout: "header"
 
 	text str: buffer["meta"], y: "0.5in", layout: "bold"
-	text str: buffer["meta2"], y: "0.65in", layout: "list"
-	text str: buffer["meta3"], y: "0.8in", layout: "list"
+	text str: buffer["meta2"], y: "0.65in", layout: "fullwidth_list_center"
+	text str: buffer["meta3"], y: "0.82in", layout: "fullwidth_list_center"
+	text str: buffer["meta4"], y: "0.98in", layout: "fullwidth_list_center"
 
-	text str: buffer["ability_1"], y: "1in", layout: "list"
 
-	text str: buffer["ability_1_number"], y: "1in", layout: "lost_num"
-	ability_1 = text str: buffer["ability_1"], y: "1in", layout: "list"
+	text str: buffer["ability_1"], y: "1.2in", layout: "list"
 
-	ext = ability_1.map.with_index { |text, i| "#{text[:height]/600.0 + 1.25}in" }
+	text str: buffer["ability_1_number"], y: "1.2in", layout: "lost_num"
+	ability_1 = text str: buffer["ability_1"], y: "1.2in", layout: "list"
+
+	ext = ability_1.map.with_index { |text, i| "#{text[:height]/600.0 + 1.45}in" }
 
 	text str: buffer["ability_3_number"], y: ext, layout: "lost_num"
 	ability_1 = text str: buffer["ability_3"], y: ext, layout: "list"

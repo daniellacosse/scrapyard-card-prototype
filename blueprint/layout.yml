@@ -2,16 +2,16 @@ fullwidth:
    width: 2.1in
    x: 0.2in
    align: center
-   font: Helvetica Neue,Regular 72
+   font: Helvetica Neue,Regular 64
 header:
    extends: fullwidth
-   font: Helvetica Neue,Bold 72
+   font: Helvetica Neue,Bold 64
 number:
    align: left
    height: 0.75in
    width: 0.5in
    x: 0.2in
-   font: Helvetica Neue,Regular 72
+   font: Helvetica Neue,Regular 64
    wrap: true
 list:
    extends: number

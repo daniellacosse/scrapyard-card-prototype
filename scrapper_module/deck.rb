@@ -26,11 +26,8 @@ LMB_DECK_CONFIG = DECK_CONFIG.merge({
 Deck.new(ADD_DECK_CONFIG) do
 	data = csv file: "addon_cache.csv"
 	buffer = data.row_map do |row, new_row|
-
 		new_row["name"] = "#{row["name"]}, (ADD)"
-
 		new_row["meta"] = if_truthy(row["mobility"]) { row["mobility"] }
-
 		new_row["id"] = "ADD-#{row["add_id"]}"
 
 		new_row
@@ -57,7 +54,7 @@ Deck.new(WEP_DECK_CONFIG) do
 
 		new_row["meta2"] = [
 			if_truthy(row["damage"]){ "Damage: #{row["damage"]}" },
-			if_truthy(row["damage_type"]){ "(#{row["damage_type"]})" },
+			if_truthy(row["damage_type"]) { "#{row["damage_type"]}"}
 		].compact.join " "
 
 		new_row["meta3"] = [
@@ -73,12 +70,11 @@ Deck.new(WEP_DECK_CONFIG) do
 	background color: "white"
 
 	rect width: "2.5in", height: "3.5in", stroke_color: :black, stroke_width: 25
-	text str: buffer["name"],          y: "0.2in",          layout: "header"
-	text str: buffer["meta"],        y: "0.45in",           layout: "meta"
-	text str: buffer["meta2"],       y: "0.63in",          layout: "meta"
-	text str: buffer["meta3"], y: "1.05in",          layout: "meta"
-
-	text str: data["text"],        y: "1.5in",           layout: "paragraph"
+	text str: buffer["name"],  y: "0.2in",          layout: "header"
+	text str: buffer["meta"],  y: "0.45in",           layout: "meta"
+	text str: buffer["meta2"], y: "0.63in",          layout: "meta"
+	text str: buffer["meta3"], y: "0.81in",          layout: "meta"
+	text str: data["text"],    y: "1in",           layout: "paragraph"
 
 
 	text str: buffer["id"], layout: "bottom_right"
@@ -111,7 +107,7 @@ Deck.new(LMB_DECK_CONFIG) do
 	text str: buffer["resilience"],   y: "0.63in",          layout: "meta"
 	text str: buffer["weight"],       y: "0.81in",          layout: "meta"
 
-	text str: data["text"],        y: "1.5in",           layout: "paragraph"
+	text str: data["text"],        y: "1in",           layout: "paragraph"
 
 
 	text str: buffer["id"], layout: "bottom_right"

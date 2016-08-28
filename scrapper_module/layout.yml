@@ -2,10 +2,10 @@ fullwidth:
    width: 2.1in
    x: 0.2in
    align: center
-   font: Helvetica Neue,Regular 72
+   font: Helvetica Neue,Regular 64
 header:
    extends: fullwidth
-   font: Helvetica Neue,Bold 72
+   font: Helvetica Neue,Bold 64
 subheader:
    extends: fullwidth
    font: Helvetica Neue,Bold 48
@@ -23,7 +23,7 @@ gray:
    color: gray
 meta:
    extends: gray
-   font: Helvetica Neue,Italic 72
+   font: Helvetica Neue,Italic 64
 paragraph:
    align: left
    height: 1.5in

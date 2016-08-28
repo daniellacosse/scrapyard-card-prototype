@@ -37,6 +37,7 @@ pdf_progress = ProgressBar.create(
 )
 
 system %{mkdir sheets}
+puts "\n"
 
 debug_progress = 0
 Document.generate "sheets/blueprint_sheets.pdf", margin: 0 do |pdf|
@@ -103,7 +104,7 @@ Document.generate "sheets/blueprint_sheets.pdf", margin: 0 do |pdf|
 		pdf.start_new_page
 	end
 
-	puts "Made #{pdf.page_count} pages. Writing to file @ blueprint_sheets.pdf..."
+	puts "\nMade #{pdf.page_count} pages. Writing to file @ blueprint_sheets.pdf..."
 end
 
 Document.generate "sheets/scrap_sheets.pdf", margin: 0 do |pdf|
@@ -178,7 +179,7 @@ Document.generate "sheets/scrap_sheets.pdf", margin: 0 do |pdf|
 		pdf.start_new_page
 	end
 
-	puts "Made #{pdf.page_count} pages. Writing to file @ scrap_sheets.pdf..."
+	puts "\nMade #{pdf.page_count} pages. Writing to file @ scrap_sheets.pdf..."
 end
 
 Document.generate "sheets/contestant_sheets.pdf", margin: 0 do |pdf|
@@ -227,7 +228,7 @@ Document.generate "sheets/contestant_sheets.pdf", margin: 0 do |pdf|
 	end
 
 	# puts "#{debug_progress}"
-	puts "Made #{pdf.page_count} pages. Writing to file @ pilot_sheets.pdf..."
+	puts "\nMade #{pdf.page_count} pages. Writing to file @ pilot_sheets.pdf..."
 end
 
 system %{open sheets}

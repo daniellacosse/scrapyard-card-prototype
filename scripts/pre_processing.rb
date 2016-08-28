@@ -4,7 +4,7 @@ require "colorize"
 
 include Math
 
-SCRAP_DECK_SIZE = 250
+SCRAP_DECK_SIZE = 160
 SCRAP_CLASSES = [
 	"mechanical",
 	"electrical",
@@ -293,7 +293,7 @@ puts "Total Scraps: #{__total_scrap_count}".light_red.underline
 puts "Scrap Count Error: #{(1 - (__total_scrap_count.to_f / SCRAP_DECK_SIZE)).round(2)}".red
 puts "Scraps per layer:".light_green.underline
 __layer_counts.sort.each do |layer, count|
-	puts "=> Layer #{layer + 1}: #{count} (#{(count.to_f/SCRAP_DECK_SIZE*100).round(2)}%)".green
+	puts "=> Layer #{layer + 1}: #{count} (#{(count.to_f/__total_scrap_count*100).round(2)}%)".green
 end
 puts "Scrap value by class:".light_yellow.underline
 SCRAP_CLASSES.each do |class_name|
@@ -304,6 +304,10 @@ end
 puts "---".light_blue
 puts "Average Blueprint cost: \t\t#{blueprint_option_values_by_percentile.values.map {|o| o.inject(:+)}.mean.round(2)}".light_blue
 puts "Average Blueprint standard_deviation: \t#{blueprint_option_values_by_percentile.values.map {|o| o.inject(:+)}.standard_deviation.round(2)}".blue
+
+puts "Cheapest Blueprint cost: \t\t#{blueprint_option_values_by_percentile.values.map {|o| o.inject(:+)}.compact.compact.min}".blue
+puts "Expensivist Blueprint cost: \t\t#{blueprint_option_values_by_percentile.values.map {|o| o.inject(:+)}.compact.max}".blue
+
 
 
 # (8) write final cards to CSV for printing w/ squib!

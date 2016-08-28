@@ -1,23 +1,25 @@
 fullwidth:
    width: 1.6in
    x: 0.2in
-   align: center
    color: black
-   font: Helvetica Neue,Regular 72
+   font: Helvetica Neue,Regular 64
 title:
    extends: fullwidth
-   font: Helvetica Neue,Bold 72
+   font: Helvetica Neue,Bold 64
    y: 0.2in
 footer:
    extends: fullwidth
    color: "#666"
    y: 1.5in
+class_icon:
+  width: 0.2in
+  height: 0.2in
 bottomright:
    x: 1.5in
    y: 1.5in
    font: Helvetica Neue,Regular 20
 middle:
-   font: Helvetica Neue,Bold 72
+   font: Helvetica Neue,Bold 64
    x: 0.7in
    y: 0.2in
 brass:

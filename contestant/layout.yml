@@ -8,7 +8,7 @@ header:
    font: Helvetica Neue,Bold 72
 lost_num:
    align: left
-   height: 0.75in
+   height: 1in
    width: 0.5in
    x: 0.2in
    font: Helvetica Neue,Regular 72
@@ -20,8 +20,19 @@ list:
    x: 0.75in
    font: Helvetica Neue,Regular 48
    color: black
+fullwidth_list:
+   width: 2.1in
+   extends: list
+   x: 0.2in
+fullwidth_list_center:
+   extends: fullwidth_list
+   align: center
+   font: Helvetica Neue,Regular 64
+fullwidth_list_gray:
+   extends: fullwidth_list
+   color: gray
 bold:
-  extends: list
+  extends: fullwidth_list_center
   font: Helvetica Neue,Bold 48
 bottom_right:
    x: 2.2in
