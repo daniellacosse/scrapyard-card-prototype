@@ -23,8 +23,8 @@ LAYER_VALUE_COEFFS = [0, 1, 2, 3].map do |layer|
 	)
 end
 
-BUYOUT_OPTIONALITY_COEFF = 0.5
-BUYOUT_PERCENTILE_COEFF = 2
+BUYOUT_OPTIONALITY_COEFF = 0.6
+BUYOUT_PERCENTILE_COEFF = 1.7
 
 # (1) read from google spreadsheets
 open_gsheet "../mastersheets/master_blueprint_sheet.gsheet", "../blueprint/cache.csv"
@@ -153,6 +153,7 @@ end
 
 __layer_counts = Hash.new(0)
 __scrap_and_class_values = {}
+__scrap_values_only = {}
 __total_scrap_count = 0
 scraps.each do |scrap|
 	current_scrap_count = weighted_scrap_counts[scrap["name"]]
@@ -192,8 +193,10 @@ scraps.each do |scrap|
 			# (save card value for later)
 			if !!__scrap_and_class_values[scrap["name"]]
 				__scrap_and_class_values[scrap["name"]] << value
+				__scrap_values_only[scrap["name"]] << value
 			else
 				__scrap_and_class_values[scrap["name"]] = [ value ]
+				__scrap_values_only[scrap["name"]] = [ value ]
 			end
 
 			classes.each do |class_name|
@@ -221,21 +224,39 @@ end
 # (5) in prep for blueprints, get median cost of each option, then the
 # => median of those and multiply by
 # => (1 + BUYOUT_OPTIONALITY_COEFF ** option_count-1)
-scaled_median_option_values = lambda do |string|
+average_scrap_value = __scrap_values_only.values.flatten.mean.round(2)
+scaled_max_option_values = lambda do |string|
 	options = string.split("\n").map { |option| option.comma_split }
+	max_option_ingredient_count = 0
+
 	options.map! do |option|
+		option_ingredient_count = 0
+
 		option_sum = option.map do |ingredient|
 			ingredient_name = ingredient[/^[a-zA-Z \[\]\-]+/].strip
 			ingredient_count = ingredient[/\s+\((\d)\)$/, 1].to_i
 			ingredient_count = 1 if ingredient_count == 0
 
+			option_ingredient_count += ingredient_count
+
 			__scrap_and_class_values[ingredient_name].median * ingredient_count
+		end
+
+		if option_ingredient_count > max_option_ingredient_count
+			max_option_ingredient_count = option_ingredient_count
 		end
 
 		option_sum.inject(:+)
 	end
 
-	options.median * (1 + BUYOUT_OPTIONALITY_COEFF ** (options.count - 1))
+	raw_option_value = options.max * (1 + BUYOUT_OPTIONALITY_COEFF ** (options.count - 1))
+	min_option_value = max_option_ingredient_count * average_scrap_value
+
+	if raw_option_value < min_option_value
+		return min_option_value
+	else
+		return raw_option_value
+	end
 end
 
 blueprint_median_option_values = {}.tap do |_bmov|
@@ -246,7 +267,7 @@ blueprint_median_option_values = {}.tap do |_bmov|
 			end
 		end.compact
 
-		_bmov[blueprint["name"]] = blueprint_requirements.map( &scaled_median_option_values)
+		_bmov[blueprint["name"]] = blueprint_requirements.map( &scaled_max_option_values)
 	end
 end
 
@@ -291,6 +312,10 @@ end
 # (7.1) log results TODO: outliers [add to util]
 puts "Total Scraps: #{__total_scrap_count}".light_red.underline
 puts "Scrap Count Error: #{(1 - (__total_scrap_count.to_f / SCRAP_DECK_SIZE)).round(2)}".red
+puts "Avg. Scrap Value: #{__scrap_values_only.values.flatten.mean.round(2)}".red
+puts "Std dev. Scrap Value: #{__scrap_values_only.values.flatten.standard_deviation.round(2)}".red
+puts "Highest Scrap Value: #{__scrap_values_only.values.flatten.max}".red
+
 puts "Scraps per layer:".light_green.underline
 __layer_counts.sort.each do |layer, count|
 	puts "=> Layer #{layer + 1}: #{count} (#{(count.to_f/__total_scrap_count*100).round(2)}%)".green
@@ -301,13 +326,53 @@ SCRAP_CLASSES.each do |class_name|
 	puts "=> => mean value: \t#{__scrap_and_class_values["[#{class_name}]"].mean.round(2)}".yellow
 	puts "=> => std dev: \t\t#{__scrap_and_class_values["[#{class_name}]"].standard_deviation.round(2)}".yellow
 end
+
+# BLUEPRINT ANALYSIS
+blueprint_costs = blueprint_option_values_by_percentile.values.map {|o| o.inject(:+)}.compact
+blueprint_average = blueprint_costs.mean.round(2)
+blueprint_std_dev = blueprint_costs.standard_deviation.round(2)
+
+blueprint_min = blueprint_option_values_by_percentile.min_by { |k, v| v.sum }
+cheapest_blueprints = blueprint_option_values_by_percentile.select do |k, v|
+	total_value = v.inject(:+)
+
+	next unless total_value
+
+	total_value <= blueprint_average - blueprint_std_dev * 2.5
+end
+
+blueprint_max = blueprint_option_values_by_percentile.max_by { |k, v| v.sum }
+costliest_blueprints = blueprint_option_values_by_percentile.select do |k, v|
+	total_value = v.inject(:+)
+
+	next unless total_value
+
+	total_value >= blueprint_average + blueprint_std_dev * 2.5
+end
+
 puts "---".light_blue
-puts "Average Blueprint cost: \t\t#{blueprint_option_values_by_percentile.values.map {|o| o.inject(:+)}.mean.round(2)}".light_blue
-puts "Average Blueprint standard_deviation: \t#{blueprint_option_values_by_percentile.values.map {|o| o.inject(:+)}.standard_deviation.round(2)}".blue
+puts "Average Blueprint cost: \t\t#{blueprint_average}".light_blue
+puts "Average Blueprint standard_deviation: \t#{blueprint_std_dev}".blue
 
-puts "Cheapest Blueprint cost: \t\t#{blueprint_option_values_by_percentile.values.map {|o| o.inject(:+)}.compact.compact.min}".blue
-puts "Expensivist Blueprint cost: \t\t#{blueprint_option_values_by_percentile.values.map {|o| o.inject(:+)}.compact.max}".blue
+if cheapest_blueprints.length == 0
+	puts "Least Expensive Blueprint: #{blueprint_min.first.downcase} (#{blueprint_min.last.sum})".light_blue
+else
+	puts "Cheapest Blueprints: (#{cheapest_blueprints.length})".light_blue
 
+	cheapest_blueprints.each do |k, v|
+		puts "=> #{k.downcase}: #{v.join(', ')} (#{v.sum})".blue
+	end
+end
+
+if costliest_blueprints.length == 0
+	puts "Most Expensive Blueprint: #{blueprint_max.first.downcase} (#{blueprint_max.last.sum})".light_blue
+else
+	puts "Costliest Blueprints: (#{costliest_blueprints.length})".light_blue
+
+	costliest_blueprints.each do |k, v|
+		puts "=> #{k.downcase}: #{v.join(', ')} (#{v.sum})".blue
+	end
+end
 
 
 # (8) write final cards to CSV for printing w/ squib!

@@ -13,7 +13,9 @@ number:
    x: 0.2in
    font: Helvetica Neue,Regular 64
    wrap: true
+   color: green
 list:
+   color: black
    extends: number
    width: 2in
    x: 0.6in

@@ -35,7 +35,7 @@ Deck.new(DECK_CONFIG) do
 	rect width: "2in", height: "2in", stroke_color: :black, stroke_width: 20
 	text str: data["name"],               layout: "title"
 	text str: data["classes"], y: Y_POS[0],         layout: "fullwidth"
-	text str: buffer["value"], y:Y_POS[1], layout: "fullwidth"
+	text str: buffer["value"], y:Y_POS[1], layout: "fullwidth_green"
 	text str: buffer["id"], layout: "footer"
 
 	save_png prefix: "scrap_"
