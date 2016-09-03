@@ -12,7 +12,6 @@ ruby pre_processing.rb
 printf "Printing Modules..."
 echo && cd ../scrapper_module/
 ruby deck.rb
-ruby analyzer.rb
 
 # (3)
 printf "Printing Blueprints..."

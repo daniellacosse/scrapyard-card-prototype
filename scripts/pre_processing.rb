@@ -1,6 +1,7 @@
 require "./util"
 require "csv"
 require "colorize"
+require "byebug"
 
 include Math
 
@@ -25,6 +26,7 @@ end
 
 BUYOUT_OPTIONALITY_COEFF = 0.6
 BUYOUT_PERCENTILE_COEFF = 1.7
+ADDON_TAX_COEFF = 2.5
 
 # (1) read from google spreadsheets
 open_gsheet "../mastersheets/master_blueprint_sheet.gsheet", "../blueprint/cache.csv"
@@ -287,7 +289,9 @@ blueprint_option_values_by_percentile = {}.tap do |_bovp|
 		)
 
 		_bovp[blueprint["name"]] = option_values.map do |option_value|
-			(option_value * (percentile * BUYOUT_PERCENTILE_COEFF + 0.5)).round
+			coeff = BUYOUT_PERCENTILE_COEFF
+			coeff *= ADDON_TAX_COEFF if blueprint["type"] == "ADD"
+			(option_value * (percentile * coeff + 0.5)).round
 		end
 	end
 end
@@ -355,7 +359,7 @@ puts "Average Blueprint cost: \t\t#{blueprint_average}".light_blue
 puts "Average Blueprint standard_deviation: \t#{blueprint_std_dev}".blue
 
 if cheapest_blueprints.length == 0
-	puts "Least Expensive Blueprint: #{blueprint_min.first.downcase} (#{blueprint_min.last.sum})".light_blue
+	puts "Least Expensive Blueprint: #{blueprint_min.first.to_s.downcase} (#{blueprint_min.last.sum})".light_blue
 else
 	puts "Cheapest Blueprints: (#{cheapest_blueprints.length})".light_blue
 
@@ -365,7 +369,7 @@ else
 end
 
 if costliest_blueprints.length == 0
-	puts "Most Expensive Blueprint: #{blueprint_max.first.downcase} (#{blueprint_max.last.sum})".light_blue
+	puts "Most Expensive Blueprint: #{blueprint_max.first.to_s.downcase} (#{blueprint_max.last.sum})".light_blue
 else
 	puts "Costliest Blueprints: (#{costliest_blueprints.length})".light_blue
 
