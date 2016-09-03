@@ -78,11 +78,9 @@ Document.generate "sheets/blueprint_sheets.pdf", margin: 0 do |pdf|
 
 				next if current_card.to_i >= BPRINT_COUNT
 
-				current_card_index = current_card - 1
-
 				# lookup current card type from blueprint cards.csv
-				current_type_id = dbl_digits(BPRINT_CARDS[current_card_index][0].to_i - 1)
-				current_type = BPRINT_CARDS[current_card_index][1]
+				current_type_id = dbl_digits(BPRINT_CARDS[current_card][0].to_i - 1)
+				current_type = BPRINT_CARDS[current_card][1]
 
 				pdf.image(
 					"#{BPRINT_BACKS[current_type]}#{current_type_id}.png",
