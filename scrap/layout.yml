@@ -4,7 +4,7 @@ fullwidth:
    color: black
    font: Helvetica Neue,Regular 64
 fullwidth_green:
-   color: green
+   color: "#259813"
    extends: fullwidth
 title:
    extends: fullwidth

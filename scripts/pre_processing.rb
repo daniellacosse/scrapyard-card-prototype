@@ -26,7 +26,7 @@ end
 
 BUYOUT_OPTIONALITY_COEFF = 0.6
 BUYOUT_PERCENTILE_COEFF = 1.7
-ADDON_TAX_COEFF = 2.5
+ADDON_TAX_COEFF = 1.85
 
 # (1) read from google spreadsheets
 open_gsheet "../mastersheets/master_blueprint_sheet.gsheet", "../blueprint/cache.csv"
@@ -291,6 +291,9 @@ blueprint_option_values_by_percentile = {}.tap do |_bovp|
 		_bovp[blueprint["name"]] = option_values.map do |option_value|
 			coeff = BUYOUT_PERCENTILE_COEFF
 			coeff *= ADDON_TAX_COEFF if blueprint["type"] == "ADD"
+
+			if_truthy(blueprint["_tax"]) { coeff *= blueprint["_tax"].to_f }
+
 			(option_value * (percentile * coeff + 0.5)).round
 		end
 	end

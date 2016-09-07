@@ -25,6 +25,7 @@ Deck.new(DECK_CONFIG) do
 	data = csv file: "cards.csv"
 	buffer = data.row_map do |row, new_row|
 		new_row["id"] = "#{row["id"]}-#{row["value"]}"
+		new_row["type"] = row["classes"].split(/,\s?/).map { |c| "[#{c}]"}.join(", ")
 
 		new_row["value"] = "$#{row["value"]}"
 

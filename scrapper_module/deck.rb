@@ -54,7 +54,7 @@ Deck.new(WEP_DECK_CONFIG) do
 
 		new_row["meta2"] = [
 			if_truthy(row["damage"]){ "Damage: #{row["damage"]}" },
-			if_truthy(row["damage_type"]) { "#{row["damage_type"]}"}
+			if_truthy(row["damage_type"]) { "#{row["damage_type"].gsub(", ", "/")}"}
 		].compact.join " "
 
 		new_row["meta3"] = [

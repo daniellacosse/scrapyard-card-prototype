@@ -158,7 +158,7 @@ end
 
 module Enumerable
    def sum
-   	self.inject(0) { |accum, i| accum + i.to_i }
+   	self.inject(0) { |accum, i| accum + i.to_f }
    end
 
    def mean
@@ -173,7 +173,7 @@ module Enumerable
 
    def sample_variance
 	   m = self.mean
-	   sum = self.inject(0) { |accum, i| accum + ( i.to_i - m ) ** 2 }
+	   sum = self.inject(0) { |accum, i| accum + ( i.to_f - m ) ** 2 }
 	   sum / ( self.length - 1 ).to_f
    end
 

@@ -3,10 +3,16 @@ require "colorize"
 require "./util"
 require "byebug"
 
-OUTLIER_TOLERANCE = 1.8
+OUTLIER_TOLERANCE = 1.85
 EFFECT_WEIGHT = 1.33
 
 NAME_COLUMN = 1
+
+# (refresh blueprints)
+open_gsheet("../mastersheets/master_weapon_sheet.gsheet", "../scrapper_module/weapon_cache.csv")
+open_gsheet("../mastersheets/master_limb_sheet.gsheet", "../scrapper_module/limb_cache.csv")
+
+system %{ruby pre_processing.rb}
 
 # === METHODS
 def componentize_table(filepath)
@@ -36,7 +42,7 @@ def analyze_collection(collection, keys = [])
 	analysis = {}
 
 	keys.each do |key|
-		collection_values = collection.map { |c| c[key].to_i }
+		collection_values = collection.map { |c| c[key].to_f }
 
 		analysis[key] = {
 			mean: collection_values.mean,
@@ -49,10 +55,10 @@ end
 
 def is_outlier(value, value_stats, tolerance = OUTLIER_TOLERANCE)
 	result = 0
-
 	if value >= (value_stats[:mean] + tolerance * value_stats[:standard_deviation])
 		result = 1
 	elsif value <= (value_stats[:mean] - tolerance * value_stats[:standard_deviation])
+		debugger
 		result = -1
 	end
 
@@ -75,7 +81,7 @@ def log_outliers(component, analysis, whitelist = [])
 		next unless whitelist.include? key
 
 		value = component[key]
-		outlier = is_outlier(value.to_i, analysis[key])
+		outlier = is_outlier(value.to_f, analysis[key])
 
 		if outlier != 0
 			outliers.push([ key, outlier, value ])
@@ -158,7 +164,12 @@ weapon_components = componentize_table("../scrapper_module/weapon_cache.csv").ma
 			mobility_score *
 			damage_type_score *
 			has_effect
-		) / raw_cost
+		).to_f / raw_cost.to_f
+	)
+
+	weapon["damage_by_spread"] = (
+		(weapon["damage"].to_i + 1) *
+		(weapon["spread"].to_i + 1)
 	)
 
 	weapon
@@ -178,10 +189,10 @@ limb_components = componentize_table("../scrapper_module/limb_cache.csv").map do
 			(limb["resilience"].to_i + 1) *
 			mobility_score *
 			has_effect
-		) / (
+		).to_f / (
 			weight *
 			raw_cost
-		)
+		).to_f
 	)
 
 	limb
@@ -194,21 +205,21 @@ weapon_components.keys.sort.each do |rank|
 	weapons_of_rank = weapon_components[rank]
 	weapon_analysis = analyze_collection(
 		weapons_of_rank,
-		["raw_power", "damage"]
+		["raw_power", "damage", "damage_by_spread"]
 	)
 
 	puts "### WEP, rank #{rank} ###\n"
 
 	log_stats(
 		weapon_analysis,
-		["raw_power", "damage"]
+		["raw_power", "damage", "damage_by_spread"]
 	)
 
 	weapons_of_rank.each do |weapon|
 		log_outliers(
 			weapon,
 			weapon_analysis,
-			["raw_power", "damage"]
+			["raw_power", "damage", "damage_by_spread"]
 		)
 	end
 end

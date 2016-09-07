@@ -14,7 +14,7 @@ Deck.new(DECK_CONFIG) do
 	data = csv file: "cards.csv"
 	module_data = csv file: "../scrapper_module/cache.csv"
 	buffer = data.row_map do |row, new_row|
-		new_row["header"] = "Blueprint, Rank #{row['rank']}"
+		new_row["header"] = "Recipe, Rank #{row['rank']}"
 		new_row["meta"] = "#{row['name']}, #{row['type']}"
 		if_truthy(row["rq1"]) do |req1|
 			new_row["rq1_buyout"] = "$#{row["rq1_buyout"]}"
@@ -56,17 +56,17 @@ Deck.new(DECK_CONFIG) do
 	text str: buffer["rq2_buyout"], y: ext, layout: "number"
 	ext2 = text str: buffer["rq2"], y: ext, layout: "list"
 
-	ext = ext2.map.with_index { |text, i| "#{text[:height]/600.0 + ext[i]/600.0 + 0.1}in" }
+	ext = ext2.map.with_index { |text, i| "#{text[:height]/600.0 + ext[i]/600.0 + 0.25}in" }
 
 	text str: buffer["rq3_buyout"], y: ext, layout: "number"
 	ext3 = text str: buffer["rq3"], y: ext, layout: "list"
 
-	ext = ext3.map.with_index { |text, i| "#{text[:height]/600.0 + ext[i]/600.0 + 0.1}in" }
+	ext = ext3.map.with_index { |text, i| "#{text[:height]/600.0 + ext[i]/600.0 + 0.25}in" }
 
 	text str: buffer["rq4_buyout"], y: ext, layout: "number"
 	ext4 = text str: buffer["rq4"], y: ext, layout: "list"
 
-	ext = ext4.map.with_index { |text, i| "#{text[:height]/600.0 + ext[i]/600.0 + 0.1}in" }
+	ext = ext4.map.with_index { |text, i| "#{text[:height]/600.0 + ext[i]/600.0 + 0.25}in" }
 
 	text str: buffer["rq5_buyout"], y: ext, layout: "number"
 	text str: buffer["rq5"], y: ext, layout: "list"

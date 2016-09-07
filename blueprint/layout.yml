@@ -13,7 +13,7 @@ number:
    x: 0.2in
    font: Helvetica Neue,Regular 64
    wrap: true
-   color: green
+   color: "#259813"
 list:
    color: black
    extends: number
