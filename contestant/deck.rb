@@ -62,7 +62,7 @@ Deck.new(DECK_CONFIG) do
 
 		new_row["meta"] = "[COMBAT MODE]"
 		new_row["meta2"] = "pilot: lv. #{row['pilot_tier']}"
-		new_row["meta3"] = "horsepower: #{row['chassis_power']}"
+		new_row["meta3"] = "horsepower: #{row['horsepower']}"
 		new_row["meta4"] = "health: #{row['health']}"
 
 		new_row["ability_1"] = row["pressure_1"]

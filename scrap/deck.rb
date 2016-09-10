@@ -53,7 +53,7 @@ Deck.new(DECK_CONFIG) do
 		class_hints = [
 			row["classes"].comma_split.shuffle.shift,
 			classes.first
-		].shuffle!
+		]
 
 		case row["layer"]
 		when 0
@@ -74,6 +74,9 @@ Deck.new(DECK_CONFIG) do
 			end
 		when 3
 			new_row["layer"] = "#ff5a00"
+			if rand < 0.5
+				class_hints = [ class_hints.first ]
+			end
 		end
 
 		new_row["class_hint_1"] = class_hints[0]
