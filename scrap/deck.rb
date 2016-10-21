@@ -25,7 +25,7 @@ Deck.new(DECK_CONFIG) do
 	data = csv file: "cards.csv"
 	buffer = data.row_map do |row, new_row|
 		new_row["id"] = "#{row["id"]}-#{row["value"]}"
-		new_row["type"] = row["classes"].split(/,\s?/).map { |c| "[#{c}]"}.join(", ")
+		new_row["type"] = (row["classes"] || "").split(/,\s?/).map { |c| "[#{c}]"}.join(", ")
 
 		new_row["value"] = "$#{row["value"]}"
 
@@ -57,26 +57,28 @@ Deck.new(DECK_CONFIG) do
 
 		case row["layer"]
 		when 0
-			new_row["layer"] = :green
+			new_row["layer"] = :blue
+			new_row["layer_radius"] = "0.875in"
 			class_hints << classes.last
 			class_hints.shuffle!
 		when 1
-			new_row["layer"] = "#d4e737"
+			new_row["layer"] = :green
+			new_row["layer_radius"] = "0.75in"
 			if rand < 0.5
 				class_hints << classes.last
 				class_hints.shuffle!
 			end
 		when 2
-			new_row["layer"] = "#FFA500"
+			new_row["layer"] = :red
+			new_row["layer_radius"] = "0.625in"
 			if rand < 0.15
 				class_hints << classes.last
 				class_hints.shuffle!
 			end
 		when 3
-			new_row["layer"] = "#ff5a00"
-			if rand < 0.5
-				class_hints = [ class_hints.first ]
-			end
+			new_row["layer"] = :black
+			new_row["layer_radius"] = "0.5in"
+			class_hints = [ class_hints.first ]
 		end
 
 		new_row["class_hint_1"] = class_hints[0]
@@ -96,9 +98,17 @@ Deck.new(DECK_CONFIG) do
 		stroke_width: 50
 	)
 
-	text str: buffer["class_hint_1"], layout: "middle", color: buffer["layer"]
-	text str: buffer["class_hint_2"], layout: "middle", color: buffer["layer"], y: "0.5in"
-	text str: buffer["class_hint_3"], layout: "middle", color: buffer["layer"], y: "1in"
+	circle(
+		radius: buffer["layer_radius"],
+		fill_color: buffer["layer"],
+		x: "1in",
+		y: "1in",
+		stroke_width: 0
+	)
+
+	text str: buffer["class_hint_1"], layout: "middle_center", color: "#fff", y: "0.9in"
+	text str: buffer["class_hint_2"], layout: "middle_center", color: "#fff", y: "0.75in"
+	text str: buffer["class_hint_3"], layout: "middle_center", color: "#fff", y: "1.05in"
 
 	save_png prefix: "scrap_back_"
 end

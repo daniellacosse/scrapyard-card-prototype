@@ -25,6 +25,11 @@ middle:
    font: Helvetica Neue,Bold 64
    x: 0.7in
    y: 0.2in
+middle_center:
+  extends: middle
+  x: 0in
+  width: 2in
+  align: center
 brass:
    extends: middle
    color: "#B5A642"

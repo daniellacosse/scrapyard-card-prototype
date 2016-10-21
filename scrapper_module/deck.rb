@@ -62,7 +62,7 @@ Deck.new(WEP_DECK_CONFIG) do
 			if_truthy(row["spread"]){ "Spread: #{row["spread"]}" }
 		].compact.join ", "
 
-		new_row["id"] = "WEP-#{row["wep_id"]}"
+		new_row["id"] = "WPN-#{row["wep_id"]}"
 
 		new_row
 	end
