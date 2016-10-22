@@ -1,5 +1,5 @@
 fullwidth:
-   width: 2.1in
+   width: 2.6in
    x: 0.2in
    align: center
    font: Helvetica Neue,Regular 72
@@ -16,12 +16,12 @@ lost_num:
    color: red
 list:
    extends: lost_num
-   width: 1.5in
+   width: 2in
    x: 0.75in
    font: Helvetica Neue,Regular 48
    color: black
 fullwidth_list:
-   width: 2.1in
+   width: 2.6in
    extends: list
    x: 0.2in
 fullwidth_list_center:
@@ -35,6 +35,6 @@ bold:
   extends: fullwidth_list_center
   font: Helvetica Neue,Bold 48
 bottom_right:
-   x: 2.2in
-   y: 3.2in
+   x: 2.7in
+   y: 3.7in
    font: Helvetica Neue,Regular 48

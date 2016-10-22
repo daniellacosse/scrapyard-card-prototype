@@ -4,7 +4,7 @@ include Squib
 
 DECK_CONFIG = {
 	layout: "layout.yml",
-	height: "3.5in", width: "2.5in",
+	height: "4in", width: "3in",
 	cards: open_gsheet("../mastersheets/master_contestant_sheet.gsheet"),
 	dpi: 600,
 	config: "config.yml"
@@ -33,7 +33,7 @@ Deck.new(DECK_CONFIG) do
 
 	background color: "white"
 
-	rect width: "2.5in", height: "3.5in", stroke_color: :black, stroke_width: 25
+	rect width: "3in", height: "4in", stroke_color: :black, stroke_width: 25
 	text str: buffer["name"], y: "0.2in", layout: "header"
 
 	text str: buffer["meta"], y: "0.5in", layout: "bold"
@@ -75,14 +75,13 @@ Deck.new(DECK_CONFIG) do
 
 	background color: "white"
 
-	rect width: "2.5in", height: "3.5in", stroke_color: :black, stroke_width: 25
+	rect width: "3in", height: "4in", stroke_color: :black, stroke_width: 25
 	text str: buffer["name"], y: "0.2in", layout: "header"
 
 	text str: buffer["meta"], y: "0.5in", layout: "bold"
 	text str: buffer["meta2"], y: "0.65in", layout: "fullwidth_list_center"
 	text str: buffer["meta3"], y: "0.82in", layout: "fullwidth_list_center"
 	text str: buffer["meta4"], y: "0.98in", layout: "fullwidth_list_center"
-
 
 	text str: buffer["ability_1"], y: "1.2in", layout: "list"
 

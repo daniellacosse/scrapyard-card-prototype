@@ -50,36 +50,36 @@ Deck.new(DECK_CONFIG) do
 		classes = SCRAP_CLASSES - row["classes"].comma_split
 		classes.shuffle!
 
-		class_hints = [
-			row["classes"].comma_split.shuffle.shift,
-			classes.first
-		]
+		class_hints = [ row["classes"].comma_split.shuffle.shift ]
 
 		case row["layer"]
 		when 0
 			new_row["layer"] = :blue
 			new_row["layer_radius"] = "0.875in"
-			class_hints << classes.last
-			class_hints.shuffle!
+			class_hints << classes.pop
+			class_hints << classes.pop
 		when 1
 			new_row["layer"] = :green
 			new_row["layer_radius"] = "0.75in"
+			class_hints << classes.pop
 			if rand < 0.5
-				class_hints << classes.last
-				class_hints.shuffle!
+				class_hints << classes.pop
 			end
 		when 2
 			new_row["layer"] = :red
 			new_row["layer_radius"] = "0.625in"
-			if rand < 0.15
-				class_hints << classes.last
-				class_hints.shuffle!
+			if rand < 0.5
+				class_hints << classes.pop
 			end
 		when 3
 			new_row["layer"] = :black
 			new_row["layer_radius"] = "0.5in"
-			class_hints = [ class_hints.first ]
+			if rand < 0.5
+				class_hints = [ row["name"] ]
+			end
 		end
+
+		class_hints.shuffle!
 
 		new_row["class_hint_1"] = class_hints[0]
 		new_row["class_hint_2"] = class_hints[1]
