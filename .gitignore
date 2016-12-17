@@ -1,10 +1,10 @@
 Gemfile.lock
 
-scrapper_module/cache.csv
+gut/cache.csv
 
-scrapper_module/addon_cache.csv
-scrapper_module/limb_cache.csv
-scrapper_module/weapon_cache.csv
+gut/addon_cache.csv
+gut/limb_cache.csv
+gut/weapon_cache.csv
 
 blueprint/cache.csv
 blueprint/cards.csv
@@ -12,7 +12,7 @@ scrap/cache.csv
 scrap/cards.csv
 contestant/cache.csv
 
-scrapper_module/_output
+gut/_output
 blueprint/_output
 scrap/_output
 contestant/_output

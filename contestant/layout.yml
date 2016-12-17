@@ -34,6 +34,12 @@ fullwidth_list_gray:
 bold:
   extends: fullwidth_list_center
   font: Helvetica Neue,Bold 48
+bold_green:
+  extends: bold
+  color: green
+bold_red:
+  extends: bold
+  color: red
 bottom_right:
    x: 2.7in
    y: 3.7in

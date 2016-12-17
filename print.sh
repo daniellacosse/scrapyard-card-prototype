@@ -10,7 +10,7 @@ ruby pre_processing.rb
 
 # (2)
 printf "Printing Modules..."
-echo && cd ../scrapper_module/
+echo && cd ../gut/
 ruby deck.rb
 
 # (3)

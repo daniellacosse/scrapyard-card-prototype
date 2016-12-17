@@ -19,8 +19,8 @@ Deck.new(DECK_CONFIG) do
 		new_row["name"] = "\"#{row['name']}\""
 
 		new_row["meta"] = "[BUILD MODE]"
-		new_row["meta2"] = "engineering: lv. #{row['eng_tier']}"
-		new_row["meta3"] = "health: #{row['health']}"
+		new_row["meta2"] = "engineering: lv. #{row['eng_lvl']}"
+		new_row["meta3"] = "fitness: lv. #{row['body_lvl']}"
 
 		new_row["ability"] = row["build_skill"]
 
@@ -36,7 +36,7 @@ Deck.new(DECK_CONFIG) do
 	rect width: "3in", height: "4in", stroke_color: :black, stroke_width: 25
 	text str: buffer["name"], y: "0.2in", layout: "header"
 
-	text str: buffer["meta"], y: "0.5in", layout: "bold"
+	text str: buffer["meta"], y: "0.5in", layout: "bold_green"
 	text str: buffer["meta2"], y: "0.65in", layout: "fullwidth_list_center"
 	text str: buffer["meta3"], y: "0.82in", layout: "fullwidth_list_center"
 
@@ -61,14 +61,14 @@ Deck.new(DECK_CONFIG) do
 		new_row["name"] = "\"#{row['name']}\""
 
 		new_row["meta"] = "[COMBAT MODE]"
-		new_row["meta2"] = "pilot: lv. #{row['pilot_tier']}"
-		new_row["meta3"] = "horsepower: #{row['horsepower']}"
-		new_row["meta4"] = "health: #{row['health']}"
+		new_row["meta2"] = "pilot: lv. #{row['pilot_lvl']}"
+		new_row["meta3"] = "chassis: lv. #{row['chassis_lvl']}"
+		new_row["meta4"] = "fitness: lv. #{row['body_lvl']}"
 
 		new_row["ability_1"] = row["pressure_1"]
-		new_row["ability_1_number"] = "(-1)"
-		new_row["ability_3"] = row["pressure_3"]
-		new_row["ability_3_number"] = "(-3)"
+		new_row["ability_1_number"] = "-1 LMB"
+		new_row["ability_2"] = row["pressure_2"]
+		new_row["ability_2_number"] = "-2 LMB"
 
 		new_row
 	end
@@ -78,7 +78,7 @@ Deck.new(DECK_CONFIG) do
 	rect width: "3in", height: "4in", stroke_color: :black, stroke_width: 25
 	text str: buffer["name"], y: "0.2in", layout: "header"
 
-	text str: buffer["meta"], y: "0.5in", layout: "bold"
+	text str: buffer["meta"], y: "0.5in", layout: "bold_red"
 	text str: buffer["meta2"], y: "0.65in", layout: "fullwidth_list_center"
 	text str: buffer["meta3"], y: "0.82in", layout: "fullwidth_list_center"
 	text str: buffer["meta4"], y: "0.98in", layout: "fullwidth_list_center"
@@ -90,8 +90,8 @@ Deck.new(DECK_CONFIG) do
 
 	ext = ability_1.map.with_index { |text, i| "#{text[:height]/600.0 + 1.45}in" }
 
-	text str: buffer["ability_3_number"], y: ext, layout: "lost_num"
-	ability_1 = text str: buffer["ability_3"], y: ext, layout: "list"
+	text str: buffer["ability_2_number"], y: ext, layout: "lost_num"
+	ability_1 = text str: buffer["ability_2"], y: ext, layout: "list"
 
 	save_png prefix: "contestant_combat_"
 end

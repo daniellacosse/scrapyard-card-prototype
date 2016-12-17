@@ -6,7 +6,7 @@ include Prawn
 
 PRINTER_ERROR_Y = 0.0
 PRINTER_ERROR_X = 0.0
-PRINT_MARGIN = 0
+PRINT_MARGIN = 0.125
 
 BPRINT_COUNT = Dir["blueprint/_output/*"].length
 BPRINT_ROW_SIZE, BPRINT_COL_SIZE = 3, 3
@@ -16,9 +16,9 @@ BPRINT_CARDS.shift
 
 BPRINT_FRONTS = "blueprint/_output/bprint_"
 BPRINT_BACKS = {
-	"LMB" => "scrapper_module/_output/lmb_",
-	"WPN" => "scrapper_module/_output/wpn_",
-	"ADD" => "scrapper_module/_output/add_"
+	"LMB" => "gut/_output/lmb_",
+	"WPN" => "gut/_output/wpn_",
+	"ADD" => "gut/_output/add_"
 }
 
 SCRAP_COUNT = Dir["scrap/_output/*"].length

@@ -12,7 +12,7 @@ DECK_CONFIG = {
 
 Deck.new(DECK_CONFIG) do
 	data = csv file: "cards.csv"
-	module_data = csv file: "../scrapper_module/cache.csv"
+	module_data = csv file: "../gut/cache.csv"
 	buffer = data.row_map do |row, new_row|
 		new_row["header"] = "Recipe, Rank #{row['rank']}"
 		new_row["meta"] = "#{row['name']}, #{row['type']}"
@@ -37,7 +37,15 @@ Deck.new(DECK_CONFIG) do
 			new_row["rq5"] = req5
 		end
 
-		new_row["id"] = "#{row['type']}-#{row['id']}"
+		if row["type"] == "LMB"
+			type_number = 1
+		elsif row["type"] == "WPN"
+			type_number = 2
+		elsif row["type"] == "ADD"
+			type_number = 3
+		end
+
+		new_row["id"] = "#{type_number}#{row['id']}"
 
 		new_row
 	end

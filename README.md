@@ -49,6 +49,6 @@ an *average group cost* refers to the average of the costs of all the possibilit
 
 > so if a group had three possibilities:
 	> 1. Automobile (value 10, rarity 0.01) **difficulty 1000**
-	> 2. Metal Frame (value 2, rarity 0.25) and Heavy Actuator (value 6, rarity 0.04) **difficulty 800**
+	> 2. alloy Frame (value 2, rarity 0.25) and Heavy Actuator (value 6, rarity 0.04) **difficulty 800**
 	> 3. Buyout **20**
 > The average cost of this group would be **606** ( log(606) = 2.78 )

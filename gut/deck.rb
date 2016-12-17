@@ -27,8 +27,8 @@ Deck.new(ADD_DECK_CONFIG) do
 	data = csv file: "addon_cache.csv"
 	buffer = data.row_map do |row, new_row|
 		new_row["name"] = "#{row["name"]}, (ADD)"
-		new_row["meta"] = if_truthy(row["mobility"]) { row["mobility"] }
-		new_row["id"] = "ADD-#{row["add_id"]}"
+		new_row["meta"] = if_truthy(row["mobility"]) {"Mobility: #{row["mobility"]}" }
+		new_row["id"] = "3#{row["add_id"]}"
 
 		new_row
 	end
@@ -50,7 +50,7 @@ Deck.new(WEP_DECK_CONFIG) do
 	data = csv file: "weapon_cache.csv"
 	buffer = data.row_map do |row, new_row|
 		new_row["name"] = "#{row["name"]}, (WPN)"
-		new_row["meta"] = if_truthy(row["mobility"]) { row["mobility"] }
+		new_row["meta"] = if_truthy(row["mobility"]) { "Mobility: #{row["mobility"]}" }
 
 		new_row["meta2"] = [
 			if_truthy(row["damage"]){ "Damage: #{row["damage"]}" },
@@ -59,10 +59,9 @@ Deck.new(WEP_DECK_CONFIG) do
 
 		new_row["meta3"] = [
 			if_truthy(row["range"]){ "Range: #{row["range"]}" },
-			if_truthy(row["spread"]){ "Spread: #{row["spread"]}" }
-		].compact.join ", "
+		].compact.join ""
 
-		new_row["id"] = "WPN-#{row["wep_id"]}"
+		new_row["id"] = "2#{row["wep_id"]}"
 
 		new_row
 	end
@@ -86,15 +85,13 @@ Deck.new(LMB_DECK_CONFIG) do
 	data = csv file: "limb_cache.csv"
 	buffer = data.row_map do |row, new_row|
 		new_row["name"] = "#{row["name"]}, (LMB)"
-		new_row["meta"] = if_truthy(row["mobility"]) { row["mobility"] }
+		new_row["meta"] = if_truthy(row["mobility"]) { "Mobility: #{row["mobility"]}" }
 
 		new_row["armor"] = if_truthy(row["armor"]){ "Armor: #{row["armor"]}"}
 
 		new_row["resilience"] = if_truthy(row["resilience"]){ "Resilience: #{row["resilience"]}"}
 
-		new_row["weight"] = if_truthy(row["weight"]){ "Weight: #{row["weight"]}" }
-
-		new_row["id"] = "LMB-#{row["lmb_id"]}"
+		new_row["id"] = "1#{row["lmb_id"]}"
 
 		new_row
 	end
@@ -103,9 +100,9 @@ Deck.new(LMB_DECK_CONFIG) do
 
 	rect width: "2.5in", height: "3.5in", stroke_color: :black, stroke_width: 25
 	text str: buffer["name"],          y: "0.2in",          layout: "header"
-	text str: buffer["armor"],        y: "0.45in",           layout: "meta"
-	text str: buffer["resilience"],   y: "0.63in",          layout: "meta"
-	text str: buffer["weight"],       y: "0.81in",          layout: "meta"
+	text str: buffer["meta"],        y: "0.45in",           layout: "meta"
+	text str: buffer["armor"],   y: "0.63in",          layout: "meta"
+	text str: buffer["resilience"],       y: "0.81in",          layout: "meta"
 
 	text str: data["text"],        y: "1in",           layout: "paragraph"
 

@@ -9,7 +9,7 @@ SCRAP_DECK_SIZE = 160
 SCRAP_CLASSES = [
 	"mechanical",
 	"electrical",
-	"metal",
+	"alloy",
 	"polymer",
 	"ceramic"
 ]
@@ -18,7 +18,7 @@ MIN_LAYER_VALUE_COEFF = 1
 MAX_LAYER_VALUE_COEFF = 10
 LAYER_VALUE_COEFF_RANGE = MAX_LAYER_VALUE_COEFF - MIN_LAYER_VALUE_COEFF
 
-LAYER_VALUE_COEFFS = [0, 1, 2, 3].map do |layer|
+LAYER_VALUE_COEFFS = [3, 2, 1, 0].map do |layer|
 	MIN_LAYER_VALUE_COEFF - (
 		(LAYER_VALUE_COEFF_RANGE / 2) * (Math.cos(PI * layer / 4) - 1)
 	)
@@ -42,6 +42,8 @@ blueprints.hash_rows! blueprint_properties
 scraps = CSV.read "../scrap/cache.csv"
 scrap_properties = scraps.shift + ["layer", "value"]
 scraps.hash_rows! scrap_properties
+
+treasures = scraps.select { |scrap| scrap["_is_treasure?"] == "y" }
 
 # (2) count up the scraps used in blueprint recepies and
 # => weight the number of copies based on their frequency
@@ -116,6 +118,10 @@ weighted_scrap_counts = {}.tap do |_wsc|
       scrap_importance / scrap_importance_from_blueprints.values.sum
     ).ceil
   end
+
+	treasures.each do |treasure|
+		_wsc[treasure["name"]] = treasure["_count_override"].to_i
+	end
 end
 
 __weighted_scrap_count_mean = weighted_scrap_counts.values.mean
@@ -156,6 +162,7 @@ end
 __layer_counts = Hash.new(0)
 __scrap_and_class_values = {}
 __scrap_values_only = {}
+__scrap_layers_by_name = {}
 __total_scrap_count = 0
 scraps.each do |scrap|
 	current_scrap_count = weighted_scrap_counts[scrap["name"]]
@@ -179,18 +186,30 @@ scraps.each do |scrap|
 		current_scrap_count.times do |card_number|
 			__total_scrap_count += 1
 
+			classes = scrap["classes"].comma_split
+
 			# determine card layer
-			layer = layer_distribution.find_index do |layer_percent|
-				(card_number.to_f / current_scrap_count) <= layer_percent
+			if scrap["_is_treasure?"] == "y"
+				layer = 0
+				__layer_counts[0] += 1
+			else
+				layer = layer_distribution.find_index do |layer_percent|
+					(card_number.to_f / current_scrap_count) <= layer_percent
+				end
+
+				layer += 1 if layer != 3 and __layer_counts[layer + 1] <= __layer_counts[layer]
+
+				__layer_counts[layer] += 1
 			end
 
-			layer += 1 if layer != 3 and __layer_counts[layer + 1] <= __layer_counts[layer]
-
-			__layer_counts[layer] += 1
-
 			# determine card value
-			classes = scrap["classes"].comma_split
-			value = (LAYER_VALUE_COEFFS[layer] * (classes.count + 1) / current_scrap_count).ceil
+			if scrap["_value_override"]
+				value = scrap["_value_override"].to_i
+			else
+				value = (
+					LAYER_VALUE_COEFFS[layer] * (classes.count + 1) / current_scrap_count
+				).ceil
+			end
 
 			# (save card value for later)
 			if !!__scrap_and_class_values[scrap["name"]]

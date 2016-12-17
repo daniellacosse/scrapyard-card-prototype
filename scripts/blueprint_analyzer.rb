@@ -9,8 +9,8 @@ EFFECT_WEIGHT = 1.33
 NAME_COLUMN = 1
 
 # (refresh blueprints)
-open_gsheet("../mastersheets/master_weapon_sheet.gsheet", "../scrapper_module/weapon_cache.csv")
-open_gsheet("../mastersheets/master_limb_sheet.gsheet", "../scrapper_module/limb_cache.csv")
+open_gsheet("../mastersheets/master_weapon_sheet.gsheet", "../gut/weapon_cache.csv")
+open_gsheet("../mastersheets/master_limb_sheet.gsheet", "../gut/limb_cache.csv")
 
 system %{ruby pre_processing.rb}
 
@@ -148,7 +148,7 @@ def __extract_raw_cost(name)
 end
 
 # === SCRIPT
-weapon_components = componentize_table("../scrapper_module/weapon_cache.csv").map do |weapon|
+weapon_components = componentize_table("../gut/weapon_cache.csv").map do |weapon|
 
 	mobility_score = _extract_mobility(weapon["mobility"])
 	damage_type_score = _extract_damage_type(weapon["damage_type"])
@@ -160,7 +160,6 @@ weapon_components = componentize_table("../scrapper_module/weapon_cache.csv").ma
 		(
 			(weapon["damage"].to_i + 1) *
 			(weapon["range"].to_i + 1) *
-			(weapon["spread"].to_i + 1) *
 			mobility_score *
 			damage_type_score *
 			has_effect
@@ -175,7 +174,7 @@ weapon_components = componentize_table("../scrapper_module/weapon_cache.csv").ma
 	weapon
 end.group_by { |c| c["_rank"] }.compact
 
-limb_components = componentize_table("../scrapper_module/limb_cache.csv").map do |limb|
+limb_components = componentize_table("../gut/limb_cache.csv").map do |limb|
 	weight = limb["weight"].to_i > 0 ? limb["weight"].to_i : 1
 
 	mobility_score = _extract_mobility(limb["mobility"])
@@ -189,10 +188,7 @@ limb_components = componentize_table("../scrapper_module/limb_cache.csv").map do
 			(limb["resilience"].to_i + 1) *
 			mobility_score *
 			has_effect
-		).to_f / (
-			weight *
-			raw_cost
-		).to_f
+		).to_f / raw_cost
 	)
 
 	limb

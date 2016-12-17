@@ -2,11 +2,11 @@ require "../scripts/util"
 require "squib"
 include Squib
 
-Y_POS = ["0.55in", "0.8in", "1.05in"]
+Y_POS = ["0.55in", "0.8in", "1.05in", "1.15in"]
 SCRAP_CLASSES = [
 	"mechanical",
 	"electrical",
-	"metal",
+	"alloy",
 	"polymer",
 	"ceramic"
 ]
@@ -24,10 +24,11 @@ puts "Printing fronts...\n"
 Deck.new(DECK_CONFIG) do
 	data = csv file: "cards.csv"
 	buffer = data.row_map do |row, new_row|
-		new_row["id"] = "#{row["id"]}-#{row["value"]}"
+		new_row["id"] = "0#{row["id"]}-#{row["value"]}"
 		new_row["type"] = (row["classes"] || "").split(/,\s?/).map { |c| "[#{c}]"}.join(", ")
 
 		new_row["value"] = "$#{row["value"]}"
+		new_row["equip"] = if_truthy(row["equip"]) { "EQUIP: #{row["equip"]}" }
 
 		new_row
 	end
@@ -37,6 +38,7 @@ Deck.new(DECK_CONFIG) do
 	text str: data["name"],               layout: "title"
 	text str: data["classes"], y: Y_POS[0],         layout: "fullwidth"
 	text str: buffer["value"], y:Y_POS[1], layout: "fullwidth_green"
+	text str: buffer["equip"], y:Y_POS[2], layout: "fullwidth_small", height: "0.8in"
 	text str: buffer["id"], layout: "footer"
 
 	save_png prefix: "scrap_"
@@ -53,29 +55,34 @@ Deck.new(DECK_CONFIG) do
 		class_hints = [ row["classes"].comma_split.shuffle.shift ]
 
 		case row["layer"]
-		when 0
+		when 3
 			new_row["layer"] = :blue
 			new_row["layer_radius"] = "0.875in"
-			class_hints << classes.pop
-			class_hints << classes.pop
-		when 1
+			2.times { class_hints << classes.shuffle.pop }
+		when 2
 			new_row["layer"] = :green
 			new_row["layer_radius"] = "0.75in"
-			class_hints << classes.pop
+			class_hints << classes.shuffle.pop
 			if rand < 0.5
-				class_hints << classes.pop
+				class_hints << classes.shuffle.pop
 			end
-		when 2
+		when 1
 			new_row["layer"] = :red
 			new_row["layer_radius"] = "0.625in"
 			if rand < 0.5
-				class_hints << classes.pop
+				class_hints << classes.shuffle.pop
 			end
-		when 3
-			new_row["layer"] = :black
+		when 0
 			new_row["layer_radius"] = "0.5in"
-			if rand < 0.5
-				class_hints = [ row["name"] ]
+
+			if row["_is_treasure?"]
+				class_hints = []
+				new_row["layer"] = "#ffd700"
+			else
+				new_row["layer"] = :black
+				if rand < 0.5
+					class_hints = [ row["name"] ]
+				end
 			end
 		end
 
